@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation externalAndroidDesign
+
+    implementation externalSimpleZXing
+
+    // 音频智能降噪组件库，如果需要使用pusher里面的音频智能降噪功能，需集成此依赖库，否则调用相关接口将会失效
+    implementation 'com.alivc.live.component:intelligentdenoise:1.0.0'
+
+    implementation project(':LiveCommon:live_commonbiz')
+    implementation project(':LiveBeauty:live_queenbeauty')
+}

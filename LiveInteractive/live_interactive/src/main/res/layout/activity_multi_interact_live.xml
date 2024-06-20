@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/big_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/big_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/wheel_black">
+
+        <FrameLayout
+            android:id="@+id/small_fl_1"
+            android:layout_width="90dp"
+            android:layout_height="160dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginEnd="140dp"
+            android:layout_marginBottom="310dp" />
+
+        <FrameLayout
+            android:id="@+id/small_fl_2"
+            android:layout_width="90dp"
+            android:layout_height="160dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="310dp" />
+
+        <FrameLayout
+            android:id="@+id/small_fl_3"
+            android:layout_width="90dp"
+            android:layout_height="160dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginEnd="140dp"
+            android:layout_marginBottom="75dp" />
+
+        <FrameLayout
+            android:id="@+id/small_fl_4"
+            android:layout_width="90dp"
+            android:layout_height="160dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="75dp" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/ic_close_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_home_id" />
+
+    <TextView
+        android:id="@+id/tv_home_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:textColor="#FCFCFD"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_show_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/interact_live_connecting"
+        android:textColor="#FCFCFD"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/tv_home_id"
+        app:layout_constraintStart_toStartOf="@id/tv_home_id"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_id" />
+
+    <com.alivc.live.interactive_common.widget.InteractiveSettingView
+        android:id="@+id/interactive_setting_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_home_id" />
+
+    <com.alivc.live.interactive_common.widget.InteractiveConnectView
+        android:id="@+id/connect_view_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/connect_view_3"
+        app:layout_constraintBottom_toBottomOf="@id/connect_view_2"/>
+
+    <com.alivc.live.interactive_common.widget.InteractiveConnectView
+        android:id="@+id/connect_view_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@id/connect_view_4"
+        app:layout_constraintEnd_toEndOf="@id/connect_view_4" />
+
+
+    <com.alivc.live.interactive_common.widget.InteractiveConnectView
+        android:id="@+id/connect_view_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/connect_view_4"
+        app:layout_constraintEnd_toStartOf="@id/connect_view_4" />
+
+    <com.alivc.live.interactive_common.widget.InteractiveConnectView
+        android:id="@+id/connect_view_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

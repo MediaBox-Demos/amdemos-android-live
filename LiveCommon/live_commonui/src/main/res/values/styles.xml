@@ -1,0 +1,66 @@
+<resources>
+    <style name="AVLiveBaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="AVLiveAppTheme" parent="AVLiveBaseTheme">
+    </style>
+
+    <style name="AVLive_ProgressBar_Horizontal_Style" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="colorAccent">#4DCFE1</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AVLiveTheme" parent="AVLiveBaseTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/anim_trans_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/anim_layout_bottom_out</item>
+    </style>
+
+    <style name="DialogStyle">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="AUILiveDialog" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <!-- 为了避免在有 NavigationBar 的手机上 Dialog 从 NavigationBar 底部上来。去掉 Dialog 的动画，使用 View 的动画。-->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="LogText">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/font_size_28px</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="Push_SeekBar_Style" parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">#4DCFE1</item>
+    </style>
+
+    <style name="AUIEditText">
+        <item name="colorControlNormal">#3A3D48</item>
+        <item name="colorControlActivated">#3A3D48</item>
+    </style>
+
+    <style name="Live.BaseDialog" parent="Theme.AppCompat.Dialog">
+
+    </style>
+
+    <style name="Live.BottomSheetDialog" parent="Live.BaseDialog">
+        <item name="android:backgroundDimAmount">0</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="backdoor_title">Live Push Demo配置页面</string>
+    <string name="backdoor_tip">用于手动配置demo相应功能</string>
+    <string name="backdoor_bare_stream">推拉裸流</string>
+    <string name="backdoor_multi_pk_16in">16方多人PK</string>
+
+</resources>
