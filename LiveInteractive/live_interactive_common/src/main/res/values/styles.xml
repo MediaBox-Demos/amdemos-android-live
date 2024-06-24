@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="AUIEditText">
+        <item name="colorControlNormal">#3A3D48</item>
+        <item name="colorControlActivated">#3A3D48</item>
+    </style>
+
+    <style name="Push_SeekBar_Style"
+        parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">#4DCFE1</item>
+    </style>
+</resources>

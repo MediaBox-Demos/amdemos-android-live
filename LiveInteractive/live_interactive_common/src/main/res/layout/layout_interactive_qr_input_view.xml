@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_interactive_pull_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/interact_live_pull_url"
+        android:textColor="#FCFCFD"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_interactive_pull_url"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="20dp"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="#E6E7EC"
+        android:textColorHint="#E6E7EC"
+        android:theme="@style/AUIEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_interactive_pull_url"
+        app:layout_constraintTop_toBottomOf="@id/tv_interactive_pull_url" />
+
+    <ImageView
+        android:id="@+id/iv_qr_pull_url"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="8dp"
+        android:src="@drawable/scan_icon"
+        app:layout_constraintBottom_toBottomOf="@id/et_interactive_pull_url"
+        app:layout_constraintEnd_toEndOf="@id/et_interactive_pull_url"
+        app:layout_constraintTop_toTopOf="@id/et_interactive_pull_url" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

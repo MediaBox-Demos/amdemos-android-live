@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/big_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/big_fl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/wheel_black">
+
+        <FrameLayout
+            android:id="@+id/small_fl"
+            android:layout_width="90dp"
+            android:layout_height="160dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginEnd="33dp"
+            android:layout_marginBottom="110dp" />
+
+    </FrameLayout>
+
+    <com.alivc.live.commonui.messageview.AutoScrollMessagesView
+        android:id="@+id/sei_receive_view"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/ic_close_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_home_id" />
+
+    <com.alivc.live.interactive_common.widget.RoomAndUserInfoView
+        android:id="@+id/anchor_info_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@id/iv_close"
+        app:layout_constraintTop_toBottomOf="@id/iv_close" />
+
+    <com.alivc.live.interactive_common.widget.InteractiveControlView
+        android:id="@+id/anchor_ctrl_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/anchor_info_view"
+        app:layout_constraintTop_toBottomOf="@+id/anchor_info_view" />
+
+    <TextView
+        android:id="@+id/tv_home_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:textColor="#FCFCFD"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_show_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/interact_live_connecting"
+        android:textColor="#FCFCFD"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/tv_home_id"
+        app:layout_constraintStart_toStartOf="@id/tv_home_id"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_id" />
+
+    <com.alivc.live.interactive_common.widget.InteractiveSettingView
+        android:id="@+id/interactive_setting_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_home_id"/>
+
+    <com.alivc.live.interactive_common.widget.InteractiveConnectView
+        android:id="@+id/connect_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="65dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_beauty"
+        android:layout_width="22dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/beauty_selector"
+        app:layout_constraintEnd_toEndOf="@id/interactive_setting_view"
+        app:layout_constraintStart_toStartOf="@id/interactive_setting_view"
+        app:layout_constraintTop_toBottomOf="@id/interactive_setting_view"/>
+
+    <ImageView
+        android:id="@+id/iv_mute_local_camera"
+        android:layout_width="22dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_camera_mute"
+        app:layout_constraintEnd_toEndOf="@id/iv_beauty"
+        app:layout_constraintStart_toStartOf="@id/iv_beauty"
+        app:layout_constraintTop_toBottomOf="@id/iv_beauty" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_mute_local_camera">
+
+        <com.alivc.live.commonui.widgets.LivePushTextSwitch
+            android:id="@+id/btn_show_custom_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <com.alivc.live.commonui.seiview.LivePusherSEIView
+        android:id="@+id/sei_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/sei_receive_view"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.alivc.live.interactive_common.widget.RoomAndUserInfoView
+        android:id="@+id/audience_info_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@id/connect_view"
+        app:layout_constraintTop_toTopOf="@id/connect_view" />
+
+    <com.alivc.live.interactive_common.widget.InteractiveControlView
+        android:id="@+id/audience_ctrl_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/audience_info_view"
+        app:layout_constraintTop_toBottomOf="@+id/audience_info_view" />
+
+    <com.aliyunsdk.queen.menu.QueenBeautyMenu
+        android:id="@+id/beauty_beauty_menuPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

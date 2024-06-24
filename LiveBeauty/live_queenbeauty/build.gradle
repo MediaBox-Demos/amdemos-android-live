@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation externalAndroidAnnotation
+
+    api project(':LiveBeauty:live_beauty')
+
+    // 此处修改：根据自身项目需要，指定依赖的菜单组件sdk
+    api(externalAliyunQueenUI) {
+        exclude group: 'com.aliyun.maliang.android', module: 'queen'
+    }
+
+    // 此处引用外部独立版本高级功能Queen
+    implementation externalAliyunQueen
+
+    // 一体化SDK，包含基础美颜功能
+    if (!"true".equalsIgnoreCase(allInOne)) {
+        // 不含一体化，独立接入Queen时，需带上该framework
+        implementation externalAliyunQueenFramwork
+    } else {
+        implementation externalAllInOne
+    }
+}

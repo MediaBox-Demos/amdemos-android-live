@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_sei_payload" />
+
+        <EditText
+            android:id="@+id/et_sei_payload_type"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textColor="@color/color_text_white"
+            android:textSize="@dimen/font_size_32px" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_sei_message" />
+
+        <EditText
+            android:id="@+id/et_sei"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/color_text_white"
+            android:textSize="@dimen/font_size_32px" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_send_sei"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/shape_pysh_btn_bg"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/sei_send_custom_message_tv"
+        android:textColor="#FCFCFD"
+        android:textSize="@dimen/font_size_24px"
+        android:textStyle="normal" />
+
+</LinearLayout>

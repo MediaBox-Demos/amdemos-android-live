@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/page_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/colour_bg" />
+
+    <ImageView
+        android:id="@+id/pull_common_btn_close"
+        android:layout_width="26dp"
+        android:layout_height="44dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="33dp"
+        android:contentDescription="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_av_live_action_bar_black_back" />
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="33dp"
+        android:gravity="center"
+        android:text="@string/pull_rtc_enter_name_tv"
+        android:textColor="#23262F"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="77dp"
+        android:background="#23262F" />
+
+
+    <RelativeLayout
+        android:id="@+id/input_rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_height_size_36"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="107dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_bg_search">
+
+        <Button
+            android:id="@+id/player_scan_image"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/view_margin_18"
+            android:background="@drawable/ic_live_scan" />
+
+        <View
+            android:id="@+id/pull_common_slipt_line"
+            android:layout_width="1px"
+            android:layout_height="19dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toRightOf="@id/player_scan_image"
+            android:background="#40ffffff" />
+
+        <EditText
+            android:id="@+id/pull_common_push_url"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_margin_22"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="80dp"
+            android:layout_toRightOf="@id/pull_common_slipt_line"
+            android:background="@null"
+            android:hint="@string/view_string_hint_pull_url"
+            android:singleLine="true"
+            android:textColor="@color/wheel_white"
+            android:textColorHint="@color/wheel_white"
+            android:textSize="@dimen/view_size_text_17" />
+
+        <Button
+            android:id="@+id/pull_common_start_btn"
+            android:layout_width="@dimen/view_width_size_64"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/shape_bg_btn_green"
+            android:text="@string/live_pull"
+            android:textColor="@color/color_title_text_black"
+            android:textSize="@dimen/view_size_text_17" />
+    </RelativeLayout>
+
+    <com.alivc.live.baselive_pull.ui.widget.PlayButtonListView
+        android:id="@+id/live_buttonlistview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="36dp" />
+
+    <com.alivc.live.commonui.messageview.AutoScrollMessagesView
+        android:id="@+id/sei_receive_view"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:padding="10dp" />
+
+</FrameLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/backdoor_title"
+        android:textColor="#747A8C"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/tv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="@string/backdoor_tip"
+        android:textColor="#B2B7C4"
+        android:textSize="11dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:background="#3A3D48"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <com.alivc.live.commonui.widgets.LivePushTextSwitch
+            android:id="@+id/sw_bare_stream"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.alivc.live.commonui.widgets.LivePushTextSwitch
+            android:id="@+id/sw_multi_pk_16in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="6dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <TextView
+                android:id="@+id/info_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:lineSpacingMultiplier="1.5"
+                android:padding="6dp"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
