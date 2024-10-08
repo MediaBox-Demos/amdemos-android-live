@@ -84,18 +84,16 @@ public class PushLaunchManager {
      * 在debug环境下，使用console日志；release环境下，使用file日志；
      *
      * @param context android context
+     * @note ADB pull file logs cmd: adb pull /sdcard/Android/data/com.alivc.live.pusher.demo/files/ ~/Downloads/live-logs
      */
     private static void launch4Log(@NonNull Context context) {
         AlivcLiveBase.setLogLevel(AlivcLivePushLogLevel.AlivcLivePushLogLevelInfo);
-        AlivcLiveBase.setConsoleEnabled(BuildConfig.DEBUG);
-        if (!BuildConfig.DEBUG) {
-            // adb pull /sdcard/Android/data/com.alivc.live.pusher.demo/files/Ali_RTS_Log/ ~/Downloads
-            AlivcLiveBase.setConsoleEnabled(false);
-            String logPath = getLogFilePath(context.getApplicationContext(), null);
-            // full log file limited was kLogMaxFileSizeInKB * 5 (parts)
-            int maxPartFileSizeInKB = 100 * 1024 * 1024; //100G
-            AlivcLiveBase.setLogDirPath(logPath, maxPartFileSizeInKB);
-        }
+        AlivcLiveBase.setConsoleEnabled(!BuildConfig.DEBUG);
+
+        String logPath = getLogFilePath(context.getApplicationContext(), null);
+        // full log file limited was kLogMaxFileSizeInKB * 5 (parts)
+        int maxPartFileSizeInKB = 100 * 1024 * 1024; //100G
+        AlivcLiveBase.setLogDirPath(logPath, maxPartFileSizeInKB);
     }
 
     private static String getLogFilePath(@NonNull Context context, String dir) {

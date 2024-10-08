@@ -18,6 +18,7 @@ import com.alivc.live.interactive_common.utils.LivePushGlobalConfig;
 import com.alivc.live.pusher.AlivcResolutionEnum;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  * 以观众身份进入连麦互动界面的 Controller
@@ -43,7 +44,6 @@ public class ViewerController {
     // 主播CDN拉流地址
     private String mPullCDNUrl;
 
-    private boolean mEnableSpeakerPhone = false;
     private boolean mNeedPullOtherStream = false;
 
     public ViewerController(Context context, InteractiveUserData viewerUserData) {
@@ -62,8 +62,22 @@ public class ViewerController {
                 .setAudioBufferSize(2048)
                 .build();
         mViewerUserData = viewerUserData;
+
+        // 1v1连麦场景下，如果开启了1080P相机采集，同时设置回调低分辨率texture
+        boolean useResolution1080P = LivePushGlobalConfig.mAlivcLivePushConfig.getResolution() == AlivcResolutionEnum.RESOLUTION_1080P;
+        if (useResolution1080P) {
+            HashMap<String, String> extras = new HashMap<>();
+            extras.put("user_specified_observer_texture_low_resolution", "TRUE");
+            LivePushGlobalConfig.mAlivcLivePushConfig.setExtras(extras);
+        }
+
         mInteractLiveManager = new InteractLiveManager();
         mInteractLiveManager.init(context, InteractiveMode.INTERACTIVE);
+
+        // 1v1连麦场景下，如果开启了1080P相机采集，同时设置回调低分辨率texture
+        if (useResolution1080P) {
+            mInteractLiveManager.changeResolution(AlivcResolutionEnum.RESOLUTION_540P);
+        }
     }
 
     /**
@@ -226,9 +240,12 @@ public class ViewerController {
         mInteractLiveManager.setMute(b);
     }
 
-    public void changeSpeakerPhone() {
-        mEnableSpeakerPhone = !mEnableSpeakerPhone;
-        mInteractLiveManager.enableSpeakerPhone(mEnableSpeakerPhone);
+    public void enableAudioCapture(boolean enable) {
+        mInteractLiveManager.enableAudioCapture(enable);
+    }
+
+    public void enableSpeakerPhone(boolean enable) {
+        mInteractLiveManager.enableSpeakerPhone(enable);
     }
 
     public void muteLocalCamera(boolean muteLocalCamera) {

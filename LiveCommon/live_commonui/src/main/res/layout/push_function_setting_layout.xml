@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#141416"
     android:orientation="vertical">
 
     <View
@@ -407,6 +408,43 @@
             android:thumb="@drawable/thumb"
             android:track="@drawable/track" />
     </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="100dp"
+            android:text="@string/camera_capture_output_preference"
+            android:textColor="#FCFCFD"
+            android:textSize="@dimen/font_size_30px" />
+
+        <TextView
+            android:id="@+id/setting_camera_capture_output_preference"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="23dp"
+            android:text="@string/camera_capture_output_preference_preview"
+            android:textColor="#FCFCFD"
+            android:textSize="@dimen/font_size_30px" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:src="@drawable/ic_live_arrow_right" />
+
+    </FrameLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="39dp"

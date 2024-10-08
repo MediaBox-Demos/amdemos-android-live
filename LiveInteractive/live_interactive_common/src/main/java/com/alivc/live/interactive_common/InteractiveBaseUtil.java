@@ -15,13 +15,6 @@ public class InteractiveBaseUtil {
     private InteractiveBaseUtil() {
     }
 
-    public static AlivcLiveMixSourceType covertVideoStreamType2MixSourceType(AlivcLivePlayVideoStreamType videoStreamType) {
-        if (videoStreamType == AlivcLivePlayVideoStreamType.STREAM_SCREEN) {
-            return AlivcLiveMixSourceType.SOURCE_SCREEN;
-        }
-        return AlivcLiveMixSourceType.SOURCE_CAMERA;
-    }
-
     /**
      * 生成随机房间号和用户id
      *
@@ -35,10 +28,12 @@ public class InteractiveBaseUtil {
         String channelId;
         String userId;
         if (sceneType == InteractiveConstants.SCENE_TYPE_INTERACTIVE_LIVE) {
-            userId = String.valueOf(random.nextInt(100)); // 互动直播的场景，用户ID随机数范围 0-99
-            channelId = String.valueOf(random.nextInt(100)); // 互动直播的场景，房间ID随机数范围 0-99
+            randomNumber = random.nextInt(99) + 1;
+            String randomNumberStr = String.valueOf(randomNumber);
+            userId = randomNumberStr; // 互动直播的场景，用户ID随机数范围 0-99
+            channelId = randomNumberStr; // 互动直播的场景，房间ID随机数范围 0-99
         } else {
-            randomNumber = random.nextInt(1000); // 非互动直播的场景，随机数范围 0-999
+            randomNumber = random.nextInt(900) + 100; // 非互动直播的场景，随机数范围 0-999
             String randomNumberStr = String.valueOf(randomNumber);
             channelId = randomNumberStr;// 设置房间ID
             userId = randomNumberStr;// 设置用户ID，与房间ID相同
@@ -47,6 +42,13 @@ public class InteractiveBaseUtil {
         if (listener != null) {
             listener.onResult(channelId, userId);
         }
+    }
+
+    public static AlivcLiveMixSourceType covertVideoStreamType2MixSourceType(AlivcLivePlayVideoStreamType videoStreamType) {
+        if (videoStreamType == AlivcLivePlayVideoStreamType.STREAM_SCREEN) {
+            return AlivcLiveMixSourceType.SOURCE_SCREEN;
+        }
+        return AlivcLiveMixSourceType.SOURCE_CAMERA;
     }
 
     public interface OnRandomIdListener {

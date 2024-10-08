@@ -5,7 +5,6 @@ import android.widget.FrameLayout;
 
 import com.alivc.live.commonbiz.LocalStreamReader;
 import com.alivc.live.commonbiz.ResourcesConst;
-import com.alivc.live.commonbiz.test.AliLiveStreamURLUtil;
 import com.alivc.live.interactive_common.InteractiveMode;
 import com.alivc.live.interactive_common.bean.InteractiveUserData;
 import com.alivc.live.interactive_common.listener.InteractLivePushPullListener;
@@ -27,8 +26,6 @@ public class MultiAnchorController {
 
     //主播推流地址
     private final InteractiveUserData mPushUserData;
-
-    private boolean mEnableSpeakerPhone = false;
 
     public MultiAnchorController(Context context, InteractiveUserData userData) {
         this.mContext = context;
@@ -103,13 +100,6 @@ public class MultiAnchorController {
         mInteractLiveManager.removeAudienceLiveMixTranscodingConfig(userData, mPushUserData != null ? mPushUserData.userId : "");
     }
 
-    /**
-     * 切换摄像头
-     */
-    public void switchCamera() {
-        mInteractLiveManager.switchCamera();
-    }
-
     public void resume() {
         mInteractLiveManager.resumePush();
         mInteractLiveManager.resumePlayRTCStream();
@@ -130,12 +120,27 @@ public class MultiAnchorController {
         mInteractLiveManager.setInteractLivePushPullListener(listener);
     }
 
+    public void switchCamera() {
+        mInteractLiveManager.switchCamera();
+    }
+
+    public void enableSpeakerPhone(boolean enable) {
+        mInteractLiveManager.enableSpeakerPhone(enable);
+    }
+
     public void setMute(boolean b) {
         mInteractLiveManager.setMute(b);
     }
 
-    public void changeSpeakerPhone() {
-        mEnableSpeakerPhone = !mEnableSpeakerPhone;
-        mInteractLiveManager.enableSpeakerPhone(mEnableSpeakerPhone);
+    public void enableAudioCapture(boolean enable) {
+        mInteractLiveManager.enableAudioCapture(enable);
+    }
+
+    public void muteLocalCamera(boolean muteLocalCamera) {
+        mInteractLiveManager.muteLocalCamera(muteLocalCamera);
+    }
+
+    public void enableLocalCamera(boolean enable) {
+        mInteractLiveManager.enableLocalCamera(enable);
     }
 }

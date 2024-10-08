@@ -23,8 +23,6 @@ class MultiBareStreamController {
     private FrameLayout mAnchorRenderView;
     //主播推流地址
     private InteractiveUserData mPushUserData;
-    //观众连麦拉流地址
-    private boolean mEnableSpeakerPhone = false;
 
     public MultiBareStreamController(Context context) {
         this.mContext = context;
@@ -98,10 +96,6 @@ class MultiBareStreamController {
         mInteractLiveManager.stopPullRTCStream(userData);
     }
 
-    public void switchCamera() {
-        mInteractLiveManager.switchCamera();
-    }
-
     public void release() {
         mInteractLiveManager.release();
         mLocalStreamReader.stopYUV();
@@ -112,12 +106,27 @@ class MultiBareStreamController {
         mInteractLiveManager.setInteractLivePushPullListener(listener);
     }
 
+    public void switchCamera() {
+        mInteractLiveManager.switchCamera();
+    }
+
+    public void enableSpeakerPhone(boolean enable) {
+        mInteractLiveManager.enableSpeakerPhone(enable);
+    }
+
     public void setMute(boolean b) {
         mInteractLiveManager.setMute(b);
     }
 
-    public void changeSpeakerPhone() {
-        mEnableSpeakerPhone = !mEnableSpeakerPhone;
-        mInteractLiveManager.enableSpeakerPhone(mEnableSpeakerPhone);
+    public void enableAudioCapture(boolean enable) {
+        mInteractLiveManager.enableAudioCapture(enable);
+    }
+
+    public void muteLocalCamera(boolean muteLocalCamera) {
+        mInteractLiveManager.muteLocalCamera(muteLocalCamera);
+    }
+
+    public void enableLocalCamera(boolean enable) {
+        mInteractLiveManager.enableLocalCamera(enable);
     }
 }

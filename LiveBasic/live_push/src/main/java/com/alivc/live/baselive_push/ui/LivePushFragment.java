@@ -37,6 +37,7 @@ import com.alivc.live.annotations.AlivcLiveRecordAudioQuality;
 import com.alivc.live.annotations.AlivcLiveRecordMediaEvent;
 import com.alivc.live.annotations.AlivcLiveRecordMediaFormat;
 import com.alivc.live.annotations.AlivcLiveRecordStreamType;
+import com.alivc.live.commonbiz.testapi.EGLContextTest;
 import com.alivc.live.commonui.dialog.CommonDialog;
 import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
 import com.alivc.live.commonui.seiview.LivePusherSEIView;
@@ -182,6 +183,8 @@ public class LivePushFragment extends Fragment {
 
     private AutoScrollMessagesView mMessagesView;
     private boolean isShowStatistics = false;
+
+    private TextView mManualCreateEGLContextTv;
 
     private boolean mIsBGMPlaying = false;
 
@@ -341,6 +344,16 @@ public class LivePushFragment extends Fragment {
                 livePusher.startLocalRecord(recordConfig);
             } else {
                 livePusher.stopLocalRecord();
+            }
+        });
+
+        mManualCreateEGLContextTv = view.findViewById(R.id.tv_manual_create_egl_context);
+        mManualCreateEGLContextTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Thread thread = new Thread(() -> EGLContextTest.testGLContext());
+                sendLogToMessageView("Manual Create EGLContext: " + thread.getName());
+                thread.start();
             }
         });
 
@@ -567,6 +580,9 @@ public class LivePushFragment extends Fragment {
                                 }
                             });
                         } else if (id == R.id.camera) {
+                            if (FastClickUtil.isProcessing()) {
+                                return;
+                            }
                             if (mCameraId == CAMERA_TYPE_FRONT.getCameraId()) {
                                 mCameraId = CAMERA_TYPE_BACK.getCameraId();
                             } else {
@@ -588,8 +604,8 @@ public class LivePushFragment extends Fragment {
                                 }
                             });
                         } else if (id == R.id.preview_button) {
-                            if (FastClickUtil.isFastClick()) {
-                                return;//点击间隔 至少1秒
+                            if (FastClickUtil.isProcessing()) {
+                                return;
                             }
                             final boolean isPreview = mPreviewButton.isSelected();
                             if (isPreview) {

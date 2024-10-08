@@ -4,11 +4,14 @@
     <string name="pull_interact_name_url">推拉裸流</string>
     <string name="pull_multi_interact_name_tv">多人连麦/PK</string>
     <string name="h5_compatible_name_tv">H5兼容模式</string>
+    <string name="earback_open_without_headset">强制耳返</string>
     <string name="data_channel_name_tv">DataChannel消息通道</string>
     <string name="external_audio_stream_tv">自定义音频</string>
     <string name="external_video_stream_tv">自定义视频</string>
     <string name="dual_audio_stream">推音频辅流</string>
     <string name="screen_share_stream">推屏幕共享流</string>
+    <string name="change_resolution_and_fps">切换分辨率与FPS</string>
+    <string name="force_ear_monitor">强制耳返</string>
     <string name="push_interactive_setting_audio_only">纯音频</string>
     <string name="push_interactive_setting_gop">GOP</string>
     <string name="push_interactive_setting_hardware_decode">开启硬解</string>
@@ -28,7 +31,7 @@
     <string name="interact_live_audio_stream_type_dual">音频辅流</string>
     <string name="interact_live_video_stream_type">视频流类型</string>
     <string name="interact_live_video_stream_type_camera">摄像头流</string>
-    <string name="interact_live_video_stream_type_screen">屏幕共享流</string>
+    <string name="interact_live_video_stream_type_screen">屏幕共享</string>
     <string name="interact_live_next">下一步</string>
     <string name="interact_live_user_id">用户 ID</string>
     <string name="interact_live_room_id">房间号</string>

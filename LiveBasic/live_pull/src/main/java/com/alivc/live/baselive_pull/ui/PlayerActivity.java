@@ -21,17 +21,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.acker.simplezxing.activity.CaptureActivity;
-import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
-import com.alivc.live.commonui.dialog.CommonDialog;
 import com.alivc.live.baselive_pull.R;
 import com.alivc.live.baselive_pull.bean.Constants;
 import com.alivc.live.baselive_pull.listener.ButtonClickListener;
-import com.alivc.live.commonbiz.test.PushDemoTestConstants;
+import com.alivc.live.baselive_pull.ui.widget.PlayButtonListView;
 import com.alivc.live.commonbiz.BuildConfig;
+import com.alivc.live.commonbiz.test.PushDemoTestConstants;
+import com.alivc.live.commonui.dialog.CommonDialog;
+import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
 import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonutils.TextFormatUtil;
 import com.alivc.live.commonutils.ToastUtils;
-import com.alivc.live.baselive_pull.ui.widget.PlayButtonListView;
 import com.aliyun.player.AliPlayer;
 import com.aliyun.player.AliPlayerFactory;
 import com.aliyun.player.IPlayer;
@@ -40,7 +40,6 @@ import com.aliyun.player.nativeclass.PlayerConfig;
 import com.aliyun.player.source.UrlSource;
 import com.cicada.player.utils.Logger;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,10 +169,26 @@ public class PlayerActivity extends AppCompatActivity implements SurfaceHolder.C
 
         // TODO keria: Remove the SEI function of the player first, as it will cause bytecode conflicts between the player SDK and the push SDK.
 //        mAliPlayer.setOnSeiDataListener((payload, uuid, data) -> {
-//            mSeiMessageView.appendMessage("[cdn] payload=" + payload + ", " + new String(data, StandardCharsets.UTF_8));
+//            String msg = new String(data, StandardCharsets.UTF_8);
+//            String str = "[cdn]: [" + payload + "], " + msg;
+//            mSeiMessageView.appendMessage(str);
+//            Log.i(TAG, str);
+//
+//            if (payload == 5) {
+//                // implementation externalGSON
+//                Gson gson = new Gson();
+//                RMSPeriodicBean rmsPeriodicBean = null;
+//                try {
+//                    // The sei message may end with \0, if we want to parse the json, we need to trim the string
+//                    rmsPeriodicBean = gson.fromJson(msg.trim(), RMSPeriodicBean.class);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    Log.i(TAG, "rms periodic bean: " + rmsPeriodicBean);
+//                }
+//            }
 //        });
     }
-
 
     private void initView() {
         mSurfaceView = (SurfaceView) findViewById(R.id.surface_view);

@@ -84,6 +84,10 @@
     <string name="camera_setting">Camera Control</string>
     <string name="front_camera">Front camera</string>
     <string name="auto_focus">Auto focus</string>
+    <string name="camera_capture_output_preference">Camera Capture Output Preference</string>
+    <string name="camera_capture_output_preference_auto">Auto</string>
+    <string name="camera_capture_output_preference_performance">Performance</string>
+    <string name="camera_capture_output_preference_preview">Preview</string>
     <string name="beauty_setting">Retouching Switch</string>
     <string name="beauty_enable">Beauty</string>
     <string name="image_push">Ingest Standby Stream</string>
@@ -106,6 +110,7 @@
     <string name="tv_sei_payload">payload</string>
 
     <string name="local_record_tv">Local Record</string>
+    <string name="manual_create_egl_context_tv">Manual Create EGLContext</string>
     <string name="sei_send_custom_message_tv">Send Custom Message</string>
 
 </resources>

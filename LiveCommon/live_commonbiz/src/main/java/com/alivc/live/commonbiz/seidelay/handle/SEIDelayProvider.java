@@ -7,18 +7,25 @@ import com.alivc.live.commonbiz.seidelay.time.SEIDelayTimeHandler;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Handles SEIDelay tasks and events.
+ * 对象 SEIDelayProvider 是一个处理 SEIDelay 任务和事件的类。
+ * 它使用一个计划好的任务执行器来定期运行任务。
+ * 当有监听器被添加或移除时，它会相应地启动或停止任务。
+ * 这个类主要处理 SEI 延迟相关的逻辑。
+ *
  * @author keria
  * @date 2023/12/5
  * @brief
  */
 public class SEIDelayProvider extends ISEIDelayHandle {
     private static final long SCHEDULED_EXECUTOR_SERVICE_PERIOD = 2 * 1000L;
-    private ScheduledExecutorService mScheduledExecutorService = null;
+    private static final int CORE_POOL_SIZE = 1;
 
+    private ScheduledThreadPoolExecutor mScheduledExecutorService;
     private volatile boolean mTaskRun = false;
 
     @Override
@@ -47,41 +54,34 @@ public class SEIDelayProvider extends ISEIDelayHandle {
 
     private void startTask() {
         stopTask();
-        mScheduledExecutorService = Executors.newScheduledThreadPool(8);
-        mScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                provideSEI();
-            }
-        }, 0, SCHEDULED_EXECUTOR_SERVICE_PERIOD, TimeUnit.MILLISECONDS);
+        mScheduledExecutorService = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(CORE_POOL_SIZE);
+        mScheduledExecutorService.scheduleAtFixedRate(this::provideSEI, 0, SCHEDULED_EXECUTOR_SERVICE_PERIOD, TimeUnit.MILLISECONDS);
     }
 
     private void stopTask() {
-        try {
-            if (mScheduledExecutorService != null) {
-                mScheduledExecutorService.shutdown();
-                if (!mScheduledExecutorService.awaitTermination(1000, TimeUnit.MICROSECONDS)) {
+        if (mScheduledExecutorService != null) {
+            mScheduledExecutorService.shutdown();
+            try {
+                if (!mScheduledExecutorService.awaitTermination(1, TimeUnit.SECONDS)) {
                     mScheduledExecutorService.shutdownNow();
                 }
+            } catch (InterruptedException e) {
+                mScheduledExecutorService.shutdownNow();
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            } finally {
                 mScheduledExecutorService = null;
             }
-        } catch (InterruptedException e) {
-            if (mScheduledExecutorService != null) {
-                mScheduledExecutorService.shutdownNow();
-            }
-            e.printStackTrace();
         }
     }
 
     private void provideSEI() {
         for (Map.Entry<String, ISEIDelayEventListener> entry : listenerHashMap.entrySet()) {
             ISEIDelayEventListener eventListener = entry.getValue();
-            if (eventListener != null) {
-                if (SEIDelayTimeHandler.isNtpTimeUpdated()) {
-                    long ntpTimestamp = SEIDelayTimeHandler.getCurrentTimestamp();
-                    SEIDelayProtocol dataProtocol = new SEIDelayProtocol(entry.getKey(), ntpTimestamp);
-                    eventListener.onEvent(dataProtocol.src, dataProtocol.src, dataProtocol.toString());
-                }
+            if (eventListener != null && SEIDelayTimeHandler.isNtpTimeUpdated()) {
+                long ntpTimestamp = SEIDelayTimeHandler.getCurrentTimestamp();
+                SEIDelayProtocol dataProtocol = new SEIDelayProtocol(entry.getKey(), ntpTimestamp);
+                eventListener.onEvent(dataProtocol.src, dataProtocol.src, dataProtocol.toString());
             }
         }
     }

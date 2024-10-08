@@ -3,7 +3,7 @@
 
     <string name="backdoor_title">Live Push Demo Configuration Page</string>
     <string name="backdoor_tip">Used to manually configure demo corresponding functions</string>
-    <string name="backdoor_bare_stream">BareStream</string>
+    <string name="backdoor_rtc_force_pre_env">Force RTC Pre Environment</string>
     <string name="backdoor_multi_pk_16in">Multi PK 16IN</string>
 
 </resources>

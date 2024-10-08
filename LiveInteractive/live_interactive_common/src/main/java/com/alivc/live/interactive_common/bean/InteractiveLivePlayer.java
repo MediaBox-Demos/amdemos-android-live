@@ -35,10 +35,7 @@ public class InteractiveLivePlayer extends AlivcLivePlayerImpl {
         @Override
         public void onPlayStopped() {
             Log.i(TAG, "onPlayStopped: " + mPullUserData);
-            mIsPulling = false;
-            if (mListener != null) {
-                mListener.onPullStop(mPullUserData);
-            }
+            notifyPullStop();
         }
 
         @Override
@@ -124,5 +121,21 @@ public class InteractiveLivePlayer extends AlivcLivePlayerImpl {
 
     public void setPullUserData(InteractiveUserData userData) {
         this.mPullUserData = userData;
+    }
+
+    // ugly codes: fix the issue of async callbacks not being executed in stopPlay after executing destroy immediately
+    @Override
+    public void destroy() {
+        notifyPullStop();
+        setPlayInfoListener(null);
+        mListener = null;
+        super.destroy();
+    }
+
+    private void notifyPullStop() {
+        mIsPulling = false;
+        if (mListener != null) {
+            mListener.onPullStop(mPullUserData);
+        }
     }
 }

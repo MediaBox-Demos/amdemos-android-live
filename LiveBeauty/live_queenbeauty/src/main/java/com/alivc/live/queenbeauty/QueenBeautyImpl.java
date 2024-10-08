@@ -36,7 +36,7 @@ import java.util.List;
 public class QueenBeautyImpl implements BeautyInterface {
     private static final String TAG = "QueenBeautyImpl";
 
-    private static final boolean FLAG_ENABLE_DEBUG_LOG = false;
+    private static final boolean FLAG_ENABLE_DEBUG_LOG = true;
 
     private final Context mContext;
 

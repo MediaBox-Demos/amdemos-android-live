@@ -1,6 +1,7 @@
 package com.alivc.live.interactive_common.widget;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,9 @@ import com.alivc.live.interactive_common.listener.InteractLiveTipsViewListener;
 import com.alivc.live.player.annotations.AlivcLivePlayAudioStreamType;
 import com.alivc.live.player.annotations.AlivcLivePlayVideoStreamType;
 
+/**
+ * 直播连麦用户信息输入框
+ */
 public class InteractiveCommonInputView extends ConstraintLayout {
 
     public enum ViewType {
@@ -79,9 +83,11 @@ public class InteractiveCommonInputView extends ConstraintLayout {
         mCancelTextView = inflate.findViewById(R.id.tv_cancel);
         mConfirmTextView = inflate.findViewById(R.id.tv_confirm);
         mTipsTextView = inflate.findViewById(R.id.tv_tips);
+
         mInputUserIdEditText = inflate.findViewById(R.id.et_input_user_id);
         mInputRoomIdEditText = inflate.findViewById(R.id.et_input_room_id);
         mInputUrlEditText = inflate.findViewById(R.id.et_input_url);
+
         mClearUserIdImageView = inflate.findViewById(R.id.iv_clear_user_id);
         mClearRoomIdImageView = inflate.findViewById(R.id.iv_clear_room_id);
         mScanQrImageView = inflate.findViewById(R.id.iv_scan_qr);
@@ -175,6 +181,12 @@ public class InteractiveCommonInputView extends ConstraintLayout {
             mTipsTextView.setVisibility(View.VISIBLE);
             mAudioRadioGroupLayout.setVisibility(View.GONE);
             mVideoRadioGroupLayout.setVisibility(View.GONE);
+        }
+    }
+
+    public void setDefaultRoomId(String roomId) {
+        if (!TextUtils.isEmpty(roomId)) {
+            mInputRoomIdEditText.setText(roomId);
         }
     }
 

@@ -26,6 +26,7 @@ public class SharedPreferenceUtils {
 
     private static final String BARE_STREAM = "bare_stream";
     private static final String USE_MULTI_PK_16IN = "useMultiPK16IN";
+    private static final String FORCE_RTC_PRE_ENVIRONMENT = "force_rtc_pre_environment";
 
     public static void setPreviewMirror(@NonNull Context context, boolean previewMirror) {
         SharedPrefUtils.saveData(context, PREVIEW_MIRROR, previewMirror);
@@ -107,22 +108,10 @@ public class SharedPreferenceUtils {
         return SharedPrefUtils.getIntData(context, DISPLAY_FIT, defaultValue);
     }
 
-    public static void setAppId(@NonNull Context context, String appID) {
-        SharedPrefUtils.saveData(context, APP_ID, appID);
-    }
-
-    public static void setAppKey(@NonNull Context context, String appKey) {
-        SharedPrefUtils.saveData(context, APP_KEY, appKey);
-    }
-
-    public static void setPlayDomain(@NonNull Context context, String playDomain) {
-        SharedPrefUtils.saveData(context, PLAY_DOMAIN, playDomain);
-    }
-
     public static void setAppInfo(@NonNull Context context, String appId, String appKey, String playDomain) {
-        setAppId(context, appId);
-        setAppKey(context, appKey);
-        setPlayDomain(context, playDomain);
+        SharedPrefUtils.saveData(context, APP_ID, appId);
+        SharedPrefUtils.saveData(context, APP_KEY, appKey);
+        SharedPrefUtils.saveData(context, PLAY_DOMAIN, playDomain);
     }
 
     public static String getAppId(@NonNull Context context) {
@@ -137,20 +126,20 @@ public class SharedPreferenceUtils {
         return SharedPrefUtils.getStringData(context, PLAY_DOMAIN, "");
     }
 
-    public static void setBareStream(@NonNull Context context, boolean value) {
-        SharedPrefUtils.saveData(context, BARE_STREAM, value);
-    }
-
-    public static boolean getBareStream(@NonNull Context context) {
-        return SharedPrefUtils.getBooleanData(context, BARE_STREAM, false);
-    }
-
     public static void setMultiPK16IN(@NonNull Context context, boolean value) {
         SharedPrefUtils.saveData(context, USE_MULTI_PK_16IN, value);
     }
 
     public static boolean getMultiPK16IN(@NonNull Context context) {
         return SharedPrefUtils.getBooleanData(context, USE_MULTI_PK_16IN, false);
+    }
+
+    public static void setForceRTCPreEnvironment(@NonNull Context context, boolean value) {
+        SharedPrefUtils.saveData(context, FORCE_RTC_PRE_ENVIRONMENT, value);
+    }
+
+    public static boolean getForceRTCPreEnvironment(@NonNull Context context) {
+        return SharedPrefUtils.getBooleanData(context, FORCE_RTC_PRE_ENVIRONMENT, false);
     }
 
     public static void clear(@NonNull Context context) {

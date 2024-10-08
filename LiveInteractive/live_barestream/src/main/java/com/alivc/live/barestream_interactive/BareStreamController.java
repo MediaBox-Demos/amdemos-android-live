@@ -29,8 +29,6 @@ class BareStreamController {
     // 观众连麦拉流信息
     private InteractiveUserData mPullUserData;
 
-    private boolean mEnableSpeakerPhone = false;
-
     public BareStreamController(Context context) {
         this.mContext = context;
         AlivcResolutionEnum resolution = LivePushGlobalConfig.mAlivcLivePushConfig.getResolution();
@@ -125,10 +123,6 @@ class BareStreamController {
         return mInteractLiveManager.isPulling(mPullUserData);
     }
 
-    public void switchCamera() {
-        mInteractLiveManager.switchCamera();
-    }
-
     public void release() {
         mInteractLiveManager.release();
         mLocalStreamReader.stopYUV();
@@ -139,12 +133,27 @@ class BareStreamController {
         mInteractLiveManager.setInteractLivePushPullListener(listener);
     }
 
+    public void switchCamera() {
+        mInteractLiveManager.switchCamera();
+    }
+
+    public void enableSpeakerPhone(boolean enable) {
+        mInteractLiveManager.enableSpeakerPhone(enable);
+    }
+
     public void setMute(boolean b) {
         mInteractLiveManager.setMute(b);
     }
 
-    public void changeSpeakerPhone() {
-        mEnableSpeakerPhone = !mEnableSpeakerPhone;
-        mInteractLiveManager.enableSpeakerPhone(mEnableSpeakerPhone);
+    public void enableAudioCapture(boolean enable) {
+        mInteractLiveManager.enableAudioCapture(enable);
+    }
+
+    public void muteLocalCamera(boolean muteLocalCamera) {
+        mInteractLiveManager.muteLocalCamera(muteLocalCamera);
+    }
+
+    public void enableLocalCamera(boolean enable) {
+        mInteractLiveManager.enableLocalCamera(enable);
     }
 }

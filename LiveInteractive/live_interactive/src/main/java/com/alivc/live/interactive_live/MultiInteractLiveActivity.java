@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alivc.live.commonbiz.test.AliLiveStreamURLUtil;
+import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
 import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonutils.ToastUtils;
 import com.alivc.live.interactive_common.InteractiveConstants;
@@ -29,10 +30,11 @@ import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.interactive_common.widget.ConnectionLostTipsView;
 import com.alivc.live.interactive_common.widget.InteractiveCommonInputView;
 import com.alivc.live.interactive_common.widget.InteractiveConnectView;
-import com.alivc.live.interactive_common.widget.InteractiveSettingView;
+import com.alivc.live.interactive_common.widget.InteractiveRoomControlView;
 import com.alivc.live.interactive_common.widget.MultiAlivcLiveView;
 import com.alivc.live.player.annotations.AlivcLivePlayError;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -56,12 +58,12 @@ public class MultiInteractLiveActivity extends AppCompatActivity {
     //根据 id 获取其他 View
     private final Map<String, MultiAlivcLiveView> mIdViewCombMap = new HashMap<>();
     private ConnectionLostTipsView mConnectionLostTipsView;
-    private boolean mIsMute = false;
-    private InteractiveSettingView mInteractiveSettingView;
+    private InteractiveRoomControlView mInteractiveRoomControlView;
     private InteractiveConnectView mInteractiveConnectView1;
     private InteractiveConnectView mInteractiveConnectView2;
     private InteractiveConnectView mInteractiveConnectView3;
     private InteractiveConnectView mInteractiveConnectView4;
+    private AutoScrollMessagesView mSeiMessageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +126,18 @@ public class MultiInteractLiveActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            @Override
+            public void onReceiveSEIMessage(int payload, byte[] data) {
+                super.onReceiveSEIMessage(payload, data);
+                mSeiMessageView.appendMessage("[rtc] payload=" + payload + ", " + new String(data, StandardCharsets.UTF_8));
+            }
+
+            @Override
+            public void onReceiveSEIDelay(String src, String type, String msg) {
+                super.onReceiveSEIDelay(src, type, msg);
+                mSeiMessageView.appendMessage("[" + src + "][" + type + "][" + msg + "ms]");
+            }
         });
         mMultiAnchorController.setAnchorRenderView(mBigFrameLayout);
         mMultiAnchorController.startPush();
@@ -142,7 +156,9 @@ public class MultiInteractLiveActivity extends AppCompatActivity {
         mCloseImageView = findViewById(R.id.iv_close);
         mShowConnectIdTextView = findViewById(R.id.tv_show_connect);
         mBigFrameLayout = findViewById(R.id.big_fl);
-        mInteractiveSettingView = findViewById(R.id.interactive_setting_view);
+        mInteractiveRoomControlView = findViewById(R.id.interactive_setting_view);
+        mSeiMessageView = findViewById(R.id.sei_receive_view);
+
         //小窗口
         FrameLayout mSmallFrameLayout1 = findViewById(R.id.small_fl_1);
         FrameLayout mSmallFrameLayout2 = findViewById(R.id.small_fl_2);
@@ -168,32 +184,35 @@ public class MultiInteractLiveActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        mInteractiveSettingView.setOnInteractiveSettingListener(new InteractiveSettingView.OnInteractiveSettingListener() {
+        mInteractiveRoomControlView.setOnClickEventListener(new InteractiveRoomControlView.OnClickEventListener() {
             @Override
-            public void onSwitchCameraClick() {
+            public void onClickSwitchCamera() {
                 mMultiAnchorController.switchCamera();
             }
 
             @Override
-            public void onMuteClick() {
-                mMultiAnchorController.setMute(!mIsMute);
-                mIsMute = !mIsMute;
-                mInteractiveSettingView.changeMute(mIsMute);
+            public void onClickSpeakerPhone(boolean enable) {
+                mMultiAnchorController.enableSpeakerPhone(enable);
             }
 
             @Override
-            public void onSpeakerPhoneClick() {
-                mMultiAnchorController.changeSpeakerPhone();
+            public void onClickMuteAudio(boolean mute) {
+                mMultiAnchorController.setMute(mute);
             }
 
             @Override
-            public void onEnableAudioClick(boolean enable) {
-
+            public void onClickMuteVideo(boolean mute) {
+                mMultiAnchorController.muteLocalCamera(mute);
             }
 
             @Override
-            public void onEnableVideoClick(boolean enable) {
+            public void onClickEnableAudio(boolean enable) {
+                mMultiAnchorController.enableAudioCapture(enable);
+            }
 
+            @Override
+            public void onClickEnableVideo(boolean enable) {
+                mMultiAnchorController.enableLocalCamera(enable);
             }
         });
 

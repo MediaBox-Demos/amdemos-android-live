@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_pk" />
+        android:src="@drawable/ic_bg_pk" />
 
     <ImageView
         android:id="@+id/iv_close"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_home_id"
         app:layout_constraintTop_toBottomOf="@id/tv_home_id" />
 
-    <FrameLayout
+    <com.alivc.live.commonui.widgets.ResizableFrameLayout
         android:id="@+id/frame_owner"
         android:layout_width="0dp"
         android:layout_height="332dp"
@@ -51,7 +51,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_show_connect" />
 
-    <FrameLayout
+    <com.alivc.live.commonui.widgets.ResizableFrameLayout
         android:id="@+id/render_container"
         android:layout_width="0dp"
         android:layout_height="332dp"
@@ -68,7 +68,7 @@
         app:layout_constraintStart_toStartOf="@id/frame_owner"
         app:layout_constraintTop_toTopOf="@id/frame_owner" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveControlView
+    <com.alivc.live.interactive_common.widget.InteractivePaneControlView
         android:id="@+id/owner_ctrl_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
         app:layout_constraintStart_toStartOf="@id/render_container"
         app:layout_constraintTop_toTopOf="@id/render_container" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveControlView
+    <com.alivc.live.interactive_common.widget.InteractivePaneControlView
         android:id="@+id/other_ctrl_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -161,6 +161,16 @@
             android:id="@+id/btn_push_screen_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <com.alivc.live.commonui.widgets.LivePushTextSwitch
+            android:id="@+id/btn_change_resolution_and_fps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.alivc.live.commonui.widgets.LivePushTextSwitch
+            android:id="@+id/btn_force_ear_monitor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <TextView
@@ -180,7 +190,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/render_container" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveSettingView
+    <com.alivc.live.interactive_common.widget.InteractiveRoomControlView
         android:id="@+id/interactive_setting_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

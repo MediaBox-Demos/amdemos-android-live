@@ -10,12 +10,12 @@ import com.alivc.live.commonutils.ContextUtils;
  */
 public class BackDoorInstance {
 
-    private boolean showBareStream;
+    private boolean forceRTCPreEnvironment;
 
     private boolean useMultiPK16IN;
 
     private BackDoorInstance() {
-        showBareStream = SharedPreferenceUtils.getBareStream(ContextUtils.getContext());
+        forceRTCPreEnvironment = SharedPreferenceUtils.getForceRTCPreEnvironment(ContextUtils.getContext());
         useMultiPK16IN = SharedPreferenceUtils.getMultiPK16IN(ContextUtils.getContext());
     }
 
@@ -23,13 +23,13 @@ public class BackDoorInstance {
         return Inner.instance;
     }
 
-    public boolean isShowBareStream() {
-        return this.showBareStream;
+    public boolean isForceRTCPreEnvironment() {
+        return this.forceRTCPreEnvironment;
     }
 
-    public void setShowBareStream(boolean showBareStream) {
-        this.showBareStream = showBareStream;
-        SharedPreferenceUtils.setBareStream(ContextUtils.getContext(), showBareStream);
+    public void setForceRTCPreEnvironment(boolean forceRTCPreEnvironment) {
+        this.forceRTCPreEnvironment = forceRTCPreEnvironment;
+        SharedPreferenceUtils.setForceRTCPreEnvironment(ContextUtils.getContext(), forceRTCPreEnvironment);
     }
 
     public boolean isUseMultiPK16IN() {

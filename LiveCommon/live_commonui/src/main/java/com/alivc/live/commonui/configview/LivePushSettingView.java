@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.alivc.live.annotations.AlivcLiveCameraCaptureOutputPreference;
 import com.alivc.live.commonui.R;
 import com.alivc.live.commonutils.TextFormatUtil;
 import com.alivc.live.pusher.AlivcAudioAACProfileEnum;
@@ -131,6 +132,10 @@ public class LivePushSettingView extends LinearLayout {
     private final MutableLiveData<AlivcPreviewDisplayMode> mPreviewDisplayModeLiveData = new MutableLiveData<>();
     public LiveData<AlivcPreviewDisplayMode> previewDisplayMode = mPreviewDisplayModeLiveData;
 
+    //摄像头采集偏好
+    private final MutableLiveData<AlivcLiveCameraCaptureOutputPreference> mCameraCaptureOutputPreferenceLiveData = new MutableLiveData<>();
+    public LiveData<AlivcLiveCameraCaptureOutputPreference> cameraCaptureOutputPreference = mCameraCaptureOutputPreferenceLiveData;
+
     //声道
     private final MutableLiveData<AlivcAudioChannelEnum> mAudioChannelLiveData = new MutableLiveData<>();
     public LiveData<AlivcAudioChannelEnum> audioChannel = mAudioChannelLiveData;
@@ -188,6 +193,7 @@ public class LivePushSettingView extends LinearLayout {
 
     private int mPushModeDefaultIndex = 0;
     private int mDisplayModeDefaultIndex = 0;
+    private int mCameraCaptureOutputPreferenceDefaultIndex = 2;
     private int mAudioChannelDefaultIndex = 1;
     private int mAudioProfileDefaultIndex = 0;
     private int mQualityModeDefaultIndex = 0;
@@ -603,6 +609,10 @@ public class LivePushSettingView extends LinearLayout {
         mViewBinding.pushFunctionSetting.settingDisplayMode.setOnClickListener(view -> {
             mPushConfigDialog.showConfigDialog(mViewBinding.pushFunctionSetting.settingDisplayMode, mDisplayModeListener, mDisplayModeDefaultIndex);
         });
+        //摄像头采集偏好
+        mViewBinding.pushFunctionSetting.settingCameraCaptureOutputPreference.setOnClickListener(view -> {
+            mPushConfigDialog.showConfigDialog(mViewBinding.pushFunctionSetting.settingCameraCaptureOutputPreference, mCameraCaptureOutputPreferenceListener, mCameraCaptureOutputPreferenceDefaultIndex);
+        });
         //水印
         mViewBinding.pushFunctionSetting.watermarkSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             mViewBinding.pushFunctionSetting.waterPosition.setClickable(isChecked);
@@ -899,6 +909,16 @@ public class LivePushSettingView extends LinearLayout {
             mPreviewDisplayModeLiveData.setValue(AlivcPreviewDisplayMode.ALIVC_LIVE_PUSHER_PREVIEW_ASPECT_FIT);
         } else if (index == 2) {
             mPreviewDisplayModeLiveData.setValue(AlivcPreviewDisplayMode.ALIVC_LIVE_PUSHER_PREVIEW_ASPECT_FILL);
+        }
+    };
+
+    private final PushConfigBottomSheetLive.OnPushConfigSelectorListener mCameraCaptureOutputPreferenceListener = (data, index) -> {
+        if (index == 0) {
+            mCameraCaptureOutputPreferenceLiveData.setValue(AlivcLiveCameraCaptureOutputPreference.AUTO);
+        } else if (index == 1) {
+            mCameraCaptureOutputPreferenceLiveData.setValue(AlivcLiveCameraCaptureOutputPreference.PERFORMANCE);
+        } else if (index == 2) {
+            mCameraCaptureOutputPreferenceLiveData.setValue(AlivcLiveCameraCaptureOutputPreference.PREVIEW);
         }
     };
 

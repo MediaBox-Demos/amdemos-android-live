@@ -9,14 +9,16 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.alivc.live.commonui.configview.LivePushSettingView;
-import com.alivc.live.commonui.widgets.AVLiveLoadingDialog;
+import com.alivc.live.annotations.AlivcLiveCameraCaptureOutputPreference;
 import com.alivc.live.commonbiz.ResourcesDownload;
 import com.alivc.live.commonbiz.SharedPreferenceUtils;
+import com.alivc.live.commonui.configview.LivePushSettingView;
+import com.alivc.live.commonui.widgets.AVLiveLoadingDialog;
 import com.alivc.live.commonutils.DownloadUtil;
 import com.alivc.live.commonutils.ToastUtils;
 import com.alivc.live.interactive_common.utils.LivePushGlobalConfig;
@@ -42,6 +44,8 @@ public class InteractiveSettingActivity extends AppCompatActivity {
     private Switch mMultiInteractSwitch;
     private Switch mH5CompatibleSwitch;
     private Switch mDataChannelSwitch;
+    private Switch mEarbackOpenWithoutHeadsetSwitch;
+    private TextView mCameraCaptureOutputPreferenceTv;
     private Button mCommitButton;
     private AVLiveLoadingDialog mLoadingDialog;
 
@@ -67,6 +71,13 @@ public class InteractiveSettingActivity extends AppCompatActivity {
         mH5CompatibleSwitch.setChecked(LivePushGlobalConfig.IS_H5_COMPATIBLE);
         mDataChannelSwitch = findViewById(R.id.data_channel_control);
         mDataChannelSwitch.setChecked(LivePushGlobalConfig.IS_DATA_CHANNEL_MESSAGE_ENABLE);
+
+        mEarbackOpenWithoutHeadsetSwitch = findViewById(R.id.earback_open_without_headset_control);
+        mEarbackOpenWithoutHeadsetSwitch.setChecked(LivePushGlobalConfig.IS_EARBACK_OPEN_WITHOUT_HEADSET);
+
+        mCameraCaptureOutputPreferenceTv = findViewById(R.id.setting_camera_capture_output_preference);
+        String cameraCaptureOutputPreferenceText = getTextFromCameraCaptureOutputPreference(LivePushGlobalConfig.CAMERA_CAPTURE_OUTPUT_PREFERENCE);
+        mCameraCaptureOutputPreferenceTv.setText(cameraCaptureOutputPreferenceText);
 
         mTabArgsLayout = findViewById(R.id.tab_args_layout);
         mTabActionLayout = findViewById(R.id.tab_action_layout);
@@ -183,6 +194,10 @@ public class InteractiveSettingActivity extends AppCompatActivity {
             mAlivcLivePushConfig.setPreviewDisplayMode(previewDisplayMode);
         });
 
+        mLivePushSettingView.cameraCaptureOutputPreference.observe(this, preference -> {
+            mAlivcLivePushConfig.setCameraCaptureOutputPreference(preference);
+        });
+
         mLivePushSettingView.audioChannel.observe(this, audioChannel -> {
             mAlivcLivePushConfig.setAudioChannels(audioChannel);
         });
@@ -269,6 +284,12 @@ public class InteractiveSettingActivity extends AppCompatActivity {
                 LivePushGlobalConfig.IS_DATA_CHANNEL_MESSAGE_ENABLE = isChecked;
             }
         });
+        mEarbackOpenWithoutHeadsetSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                LivePushGlobalConfig.IS_EARBACK_OPEN_WITHOUT_HEADSET = isChecked;
+            }
+        });
     }
 
     private void showProgressDialog(@StringRes int tipsResId) {
@@ -309,5 +330,17 @@ public class InteractiveSettingActivity extends AppCompatActivity {
             }
         });
         showProgressDialog(R.string.waiting_download_video_resources);
+    }
+
+    private String getTextFromCameraCaptureOutputPreference(AlivcLiveCameraCaptureOutputPreference cameraCaptureOutputPreference) {
+        if (cameraCaptureOutputPreference == AlivcLiveCameraCaptureOutputPreference.AUTO) {
+            return getString(R.string.camera_capture_output_preference_auto);
+        } else if (cameraCaptureOutputPreference == AlivcLiveCameraCaptureOutputPreference.PERFORMANCE) {
+            return getString(R.string.camera_capture_output_preference_performance);
+        } else if (cameraCaptureOutputPreference == AlivcLiveCameraCaptureOutputPreference.PREVIEW) {
+            return getString(R.string.camera_capture_output_preference_preview);
+        } else {
+            return getString(R.string.camera_capture_output_preference_preview);
+        }
     }
 }

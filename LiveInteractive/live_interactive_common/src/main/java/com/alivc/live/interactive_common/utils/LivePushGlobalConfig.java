@@ -1,5 +1,6 @@
 package com.alivc.live.interactive_common.utils;
 
+import com.alivc.live.annotations.AlivcLiveCameraCaptureOutputPreference;
 import com.alivc.live.pusher.AlivcLivePushConfig;
 
 /**
@@ -25,6 +26,11 @@ public class LivePushGlobalConfig {
     public static boolean IS_DATA_CHANNEL_MESSAGE_ENABLE = false;
 
     /**
+     * 开启强制耳返
+     */
+    public static boolean IS_EARBACK_OPEN_WITHOUT_HEADSET = false;
+
+    /**
      * H5兼容模式（可与web连麦互通）
      */
     public static boolean IS_H5_COMPATIBLE = false;
@@ -42,4 +48,9 @@ public class LivePushGlobalConfig {
      * 水印
      */
     public static boolean ENABLE_WATER_MARK = false;
+
+    /**
+     * 摄像头采集偏好
+     */
+    public static AlivcLiveCameraCaptureOutputPreference CAMERA_CAPTURE_OUTPUT_PREFERENCE = AlivcLiveCameraCaptureOutputPreference.PREVIEW;
 }
