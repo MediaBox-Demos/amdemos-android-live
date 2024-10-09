@@ -26,7 +26,6 @@ import com.alivc.live.commonbiz.test.AliLiveStreamURLUtil;
 import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
 import com.alivc.live.commonui.widgets.LivePushTextSwitch;
 import com.alivc.live.commonui.seiview.LivePusherSEIView;
-import com.alivc.live.commonutils.FastClickUtil;
 import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonutils.ToastUtils;
 import com.alivc.live.interactive_common.InteractiveConstants;
@@ -40,7 +39,7 @@ import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.interactive_common.widget.ConnectionLostTipsView;
 import com.alivc.live.interactive_common.widget.InteractiveCommonInputView;
 import com.alivc.live.interactive_common.widget.InteractiveConnectView;
-import com.alivc.live.interactive_common.widget.InteractiveSettingView;
+import com.alivc.live.interactive_common.widget.InteractiveRoomControlView;
 import com.alivc.live.interactive_common.widget.RoomAndUserInfoView;
 import com.alivc.live.player.annotations.AlivcLivePlayError;
 import com.aliyunsdk.queen.menu.QueenBeautyMenu;
@@ -74,12 +73,10 @@ public class InteractLiveActivity extends AppCompatActivity {
     private ConnectionLostTipsView mConnectionLostTipsView;
     private RoomAndUserInfoView mAnchorInfoView;
     private RoomAndUserInfoView mAudienceInfoView;
-    private boolean mIsMute = false;
     private InteractiveCommonInputView commonInputView;
     private InteractiveConnectView mInteractiveConnectView;
-    private InteractiveSettingView mInteractiveSettingView;
+    private InteractiveRoomControlView mInteractiveRoomControlView;
     private ImageView mBeautyImageView;
-    private ImageView mMuteLocalCameraImageView;
 
     // 美颜menu
     private QueenMenuPanel mBeautyMenuPanel;
@@ -89,8 +86,6 @@ public class InteractLiveActivity extends AppCompatActivity {
     private AutoScrollMessagesView mSeiMessageView;
 
     private LivePushTextSwitch mShowCustomMessageView;
-
-    private boolean mMuteLocalCamera = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,9 +134,8 @@ public class InteractLiveActivity extends AppCompatActivity {
         mShowConnectIdTextView = findViewById(R.id.tv_show_connect);
         mBigFrameLayout = findViewById(R.id.big_fl);
         mSmallFrameLayout = findViewById(R.id.small_fl);
-        mInteractiveSettingView = findViewById(R.id.interactive_setting_view);
+        mInteractiveRoomControlView = findViewById(R.id.interactive_setting_view);
         mBeautyImageView = findViewById(R.id.iv_beauty);
-        mMuteLocalCameraImageView = findViewById(R.id.iv_mute_local_camera);
 
         mBeautyMenuPanel = QueenBeautyMenu.getPanel(this);
         mBeautyMenuPanel.onHideMenu();
@@ -197,17 +191,6 @@ public class InteractLiveActivity extends AppCompatActivity {
                 } else {
                     mQueenBeautyMenu.setVisibility(View.VISIBLE);
                     mBeautyMenuPanel.onShowMenu();
-                }
-            }
-        });
-
-        mMuteLocalCameraImageView.setOnClickListener(view -> {
-            if (!FastClickUtil.isFastClick()) {
-                mMuteLocalCamera = !mMuteLocalCamera;
-                if (mIsAnchor) {
-                    mAnchorController.muteLocalCamera(mMuteLocalCamera);
-                } else {
-                    mViewerController.muteLocalCamera(mMuteLocalCamera);
                 }
             }
         });
@@ -406,9 +389,9 @@ public class InteractLiveActivity extends AppCompatActivity {
             showInteractLiveDialog(getResources().getString(R.string.interact_live_leave_room_tips), false);
         });
 
-        mInteractiveSettingView.setOnInteractiveSettingListener(new InteractiveSettingView.OnInteractiveSettingListener() {
+        mInteractiveRoomControlView.setOnClickEventListener(new InteractiveRoomControlView.OnClickEventListener() {
             @Override
-            public void onSwitchCameraClick() {
+            public void onClickSwitchCamera() {
                 if (mIsAnchor) {
                     mAnchorController.switchCamera();
                 } else {
@@ -417,36 +400,43 @@ public class InteractLiveActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onMuteClick() {
+            public void onClickSpeakerPhone(boolean enable) {
                 if (mIsAnchor) {
-                    mAnchorController.setMute(!mIsMute);
+                    mAnchorController.enableSpeakerPhone(enable);
                 } else {
-                    mViewerController.setMute(!mIsMute);
-                }
-                mIsMute = !mIsMute;
-                mInteractiveSettingView.changeMute(mIsMute);
-            }
-
-            @Override
-            public void onSpeakerPhoneClick() {
-                if (mIsAnchor) {
-                    mAnchorController.changeSpeakerPhone();
-                } else {
-                    mViewerController.changeSpeakerPhone();
+                    mViewerController.enableSpeakerPhone(enable);
                 }
             }
 
             @Override
-            public void onEnableAudioClick(boolean enable) {
+            public void onClickMuteAudio(boolean mute) {
                 if (mIsAnchor) {
-                    mAnchorController.changeSpeakerPhone();
+                    mAnchorController.setMute(mute);
                 } else {
-                    mViewerController.changeSpeakerPhone();
+                    mViewerController.setMute(mute);
                 }
             }
 
             @Override
-            public void onEnableVideoClick(boolean enable) {
+            public void onClickMuteVideo(boolean mute) {
+                if (mIsAnchor) {
+                    mAnchorController.muteLocalCamera(mute);
+                } else {
+                    mViewerController.muteLocalCamera(mute);
+                }
+            }
+
+            @Override
+            public void onClickEnableAudio(boolean enable) {
+                if (mIsAnchor) {
+                    mAnchorController.enableAudioCapture(enable);
+                } else {
+                    mViewerController.enableAudioCapture(enable);
+                }
+            }
+
+            @Override
+            public void onClickEnableVideo(boolean enable) {
                 if (mIsAnchor) {
                     mAnchorController.enableLocalCamera(enable);
                 } else {

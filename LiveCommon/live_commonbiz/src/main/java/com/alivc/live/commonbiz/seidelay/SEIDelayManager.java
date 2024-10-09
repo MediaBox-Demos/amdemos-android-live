@@ -36,12 +36,7 @@ public class SEIDelayManager {
 
     private void requestNTPTime() {
         try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    SEIDelayTimeHandler.requestNTPTime();
-                }
-            }).start();
+            new Thread(SEIDelayTimeHandler::requestNTPTime).start();
         } catch (Exception e) {
             e.printStackTrace();
         }

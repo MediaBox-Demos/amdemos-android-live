@@ -4,11 +4,14 @@
     <string name="pull_interact_name_url">Connect Input URL</string>
     <string name="pull_multi_interact_name_tv">Multi Connect Interact/PK</string>
     <string name="h5_compatible_name_tv">H5 Compatible</string>
+    <string name="earback_open_without_headset">Earback Without Headset</string>
     <string name="data_channel_name_tv">Data Channel</string>
     <string name="external_audio_stream_tv">External Audio Stream</string>
     <string name="external_video_stream_tv">External Video Stream</string>
     <string name="dual_audio_stream">Push Dual Audio</string>
     <string name="screen_share_stream">Push Screen Share</string>
+    <string name="change_resolution_and_fps">Change Resolution FPS</string>
+    <string name="force_ear_monitor">Force Ear Monitor</string>
     <string name="push_interactive_setting_audio_only">Audio Only</string>
     <string name="push_interactive_setting_gop">GOP</string>
     <string name="push_interactive_setting_hardware_decode">Enable Hardware Decode</string>

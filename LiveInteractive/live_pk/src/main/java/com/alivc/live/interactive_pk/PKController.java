@@ -5,6 +5,7 @@ import static com.alivc.live.interactive_common.utils.LivePushGlobalConfig.mAliv
 import android.content.Context;
 import android.widget.FrameLayout;
 
+import com.alivc.live.annotations.AlivcLiveMuteLocalAudioMode;
 import com.alivc.live.commonbiz.LocalStreamReader;
 import com.alivc.live.commonbiz.ResourcesConst;
 import com.alivc.live.commonbiz.test.AliLiveStreamURLUtil;
@@ -15,8 +16,10 @@ import com.alivc.live.interactive_common.utils.LivePushGlobalConfig;
 import com.alivc.live.player.annotations.AlivcLivePlayVideoStreamType;
 import com.alivc.live.pusher.AlivcImageFormat;
 import com.alivc.live.pusher.AlivcLiveLocalRecordConfig;
+import com.alivc.live.pusher.AlivcLivePushAudioEffectVoiceChangeMode;
 import com.alivc.live.pusher.AlivcLivePushAudioFrame;
 import com.alivc.live.pusher.AlivcLivePushExternalAudioStreamConfig;
+import com.alivc.live.pusher.AlivcLivePushVideoConfig;
 import com.alivc.live.pusher.AlivcLivePusherRawDataSample;
 import com.alivc.live.pusher.AlivcPreviewDisplayMode;
 import com.alivc.live.pusher.AlivcResolutionEnum;
@@ -39,8 +42,6 @@ public class PKController {
     private LocalStreamReader mLocalStreamReader;
     private LocalStreamReader mLocalStreamReader2;
     private LocalStreamReader mLocalStreamReader3;
-
-    private boolean mEnableSpeakerPhone = false;
 
     public PKController(Context context, InteractiveUserData userData) {
         mPKLiveManager = new PKLiveManager();
@@ -273,29 +274,24 @@ public class PKController {
     /**
      * 静音对端主播（一般用于PK惩罚环节的业务场景）
      *
-     * @param mute 静音
+     * @param userKey userKey
+     * @param mute    是否静音
+     * @see <a href="https://help.aliyun.com/zh/live/user-guide/configure-mute-in-battle-scenarios">主播PK场景实现静音功能</a>
      */
-    public void mutePKMixStream(boolean mute) {
+    public void mutePKAnchor(String userKey, boolean mute) {
         if (!isPKing() || mPKLiveManager == null) {
             return;
         }
 
-        // 是否静音连麦实时流
+        // 更新连麦静音
         if (mute) {
-            mPKLiveManager.pauseAudioPlaying(mOtherUserData.getKey());
+            mPKLiveManager.pauseAudioPlaying(userKey);
         } else {
-            mPKLiveManager.resumeAudioPlaying(mOtherUserData.getKey());
+            mPKLiveManager.resumeAudioPlaying(userKey);
         }
 
         // 更新混流静音
-        mPKLiveManager.setLiveMixTranscodingConfig(mOwnerUserData, mOtherUserData, mute);
-    }
-
-    /**
-     * 切换摄像头
-     */
-    public void switchCamera() {
-        mPKLiveManager.switchCamera();
+        mPKLiveManager.muteAnchorMultiStream(mPKLiveManager.getUserDataByKey(userKey), mute);
     }
 
     public boolean isPKing() {
@@ -387,18 +383,6 @@ public class PKController {
         }
     }
 
-    public void muteAnchor(String userKey, boolean mute) {
-        // 更新连麦静音
-        if (mute) {
-            mPKLiveManager.pauseAudioPlaying(userKey);
-        } else {
-            mPKLiveManager.resumeAudioPlaying(userKey);
-        }
-
-        // 更新混流静音
-        mPKLiveManager.muteAnchorMultiStream(mPKLiveManager.getUserDataByKey(userKey), mute);
-    }
-
     public void setPKLivePushPullListener(InteractLivePushPullListener listener) {
         mPKLiveManager.setInteractLivePushPullListener(listener);
     }
@@ -420,17 +404,48 @@ public class PKController {
         mPKLiveManager.release();
     }
 
+    public void setBGMEarsBack(boolean isOpen) {
+        mPKLiveManager.setBGMEarsBack(isOpen);
+    }
+
+    public void setAudioEffectVoiceChangeMode(AlivcLivePushAudioEffectVoiceChangeMode voiceChangeMode) {
+        mPKLiveManager.setAudioEffectVoiceChangeMode(voiceChangeMode);
+    }
+
+    public void playAudioEffects() {
+        mPKLiveManager.playAudioEffects();
+    }
+
+    public void stopAudioEffect() {
+        mPKLiveManager.stopAudioEffect();
+    }
+
+    public void setVideoConfig(AlivcLivePushVideoConfig videoConfig) {
+        mPKLiveManager.setVideoConfig(videoConfig);
+    }
+
+    public void switchCamera() {
+        mPKLiveManager.switchCamera();
+    }
+
+    public void enableSpeakerPhone(boolean enable) {
+        mPKLiveManager.enableSpeakerPhone(enable);
+    }
+
     public void setMute(boolean b) {
         mPKLiveManager.setMute(b);
     }
 
-    public void changeSpeakerPhone() {
-        mEnableSpeakerPhone = !mEnableSpeakerPhone;
-        mPKLiveManager.enableSpeakerPhone(mEnableSpeakerPhone);
+    public void setMute(boolean isMute, AlivcLiveMuteLocalAudioMode muteLocalAudioMode) {
+        mPKLiveManager.setMute(isMute, muteLocalAudioMode);
     }
 
     public void enableAudioCapture(boolean enable) {
         mPKLiveManager.enableAudioCapture(enable);
+    }
+
+    public void muteLocalCamera(boolean muteLocalCamera) {
+        mPKLiveManager.muteLocalCamera(muteLocalCamera);
     }
 
     public void enableLocalCamera(boolean enable) {

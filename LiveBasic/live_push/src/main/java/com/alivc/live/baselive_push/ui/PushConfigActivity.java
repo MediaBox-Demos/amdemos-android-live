@@ -39,6 +39,7 @@ import com.alivc.live.annotations.AlivcLiveMode;
 import com.alivc.live.baselive_push.R;
 import com.alivc.live.commonbiz.ResourcesDownload;
 import com.alivc.live.commonbiz.SharedPreferenceUtils;
+import com.alivc.live.commonbiz.backdoor.BackDoorInstance;
 import com.alivc.live.commonbiz.test.PushDemoTestConstants;
 import com.alivc.live.commonbiz.backdoor.BackDoorActivity;
 import com.alivc.live.commonui.configview.LivePushSettingView;
@@ -66,6 +67,7 @@ import com.alivc.live.pusher.WaterMarkInfo;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PushConfigActivity extends AppCompatActivity {
 
@@ -114,7 +116,6 @@ public class PushConfigActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.push_setting);
         mAlivcLivePushConfig = new AlivcLivePushConfig();
-        mAlivcLivePushConfig.setExtraInfo("such_as_user_id");
 
         //启用内置crash捕获机制，它只会捕获sdk内部造成的crash，而app层依然可以捕获到所有的crash，默认值为true
         //mAlivcLivePushConfig.setEnableSDKCrashMechanism(false);
@@ -153,6 +154,12 @@ public class PushConfigActivity extends AppCompatActivity {
             mUrl.setText(url);
         }
 
+        // Demo逻辑，用于测试，请勿follow！如果强制RTC预发环境，那么增加extra配置
+        if (BackDoorInstance.getInstance().isForceRTCPreEnvironment()) {
+            HashMap<String, String> extras = new HashMap<>(4);
+            extras.put("user_specified_environment", "PRE_RELEASE");
+            mAlivcLivePushConfig.setExtras(extras);
+        }
     }
 
     private void initView() {
@@ -182,10 +189,6 @@ public class PushConfigActivity extends AppCompatActivity {
         }
 
         mLivePushSettingView.showArgsContent(true);
-
-        // 推拉裸流为定制功能，仅针对于有定制需求的客户开放使用；为避免客户理解错乱，故对外演示demo隐藏此入口。
-        AppCompatRadioButton radioButton = findViewById(R.id.push_mode_raw_stream);
-        radioButton.setVisibility(View.GONE);
     }
 
     private void setClick() {
@@ -310,6 +313,10 @@ public class PushConfigActivity extends AppCompatActivity {
             SharedPreferenceUtils.setDisplayFit(getApplicationContext(), previewDisplayMode.getPreviewDisplayMode());
         });
 
+        mLivePushSettingView.cameraCaptureOutputPreference.observe(this, preference -> {
+            mAlivcLivePushConfig.setCameraCaptureOutputPreference(preference);
+        });
+
         mLivePushSettingView.audioChannel.observe(this, audioChannel -> {
             mAlivcLivePushConfig.setAudioChannels(audioChannel);
         });
@@ -390,8 +397,8 @@ public class PushConfigActivity extends AppCompatActivity {
         public void onClick(View view) {
             int id = view.getId();
             if (id == R.id.beginPublish) {
-                if (FastClickUtil.isFastClick()) {
-                    return;//点击间隔 至少1秒
+                if (FastClickUtil.isProcessing()) {
+                    return;
                 }
                 if (getPushConfig() != null) {
 

@@ -68,12 +68,13 @@ public class InteractLiveManager extends InteractLiveBaseManager {
 
         // 添加主播混流窗口
         AlivcLiveMixStream anchorMixStream = new AlivcLiveMixStream();
-        anchorMixStream.setUserId(anchorUserData.userId);
-        anchorMixStream.setX(0);
-        anchorMixStream.setY(0);
-        anchorMixStream.setWidth(mAlivcLivePushConfig.getWidth());
-        anchorMixStream.setHeight(mAlivcLivePushConfig.getHeight());
-        anchorMixStream.setZOrder(1);
+        anchorMixStream.userId = anchorUserData.userId;
+        anchorMixStream.x = 0;
+        anchorMixStream.y = 0;
+        anchorMixStream.width = mAlivcLivePushConfig.getWidth();
+        anchorMixStream.height = mAlivcLivePushConfig.getHeight();
+        anchorMixStream.zOrder = 1;
+        anchorMixStream.backgroundImageUrl = "https://alivc-demo-cms.alicdn.com/versionProduct/resources/pictures/siheng.jpg";
 
         mixStreams.add(anchorMixStream);
         Log.d(TAG, "anchorMixStream: " + anchorMixStream);
@@ -81,20 +82,21 @@ public class InteractLiveManager extends InteractLiveBaseManager {
         // 添加连麦观众混流窗口
         AlivcLiveMixStream audienceMixStream = new AlivcLiveMixStream();
         if (mAudienceFrameLayout != null) {
-            audienceMixStream.setUserId(audienceUserData.userId);
-            audienceMixStream.setX((int) mAudienceFrameLayout.getX() / 3);
-            audienceMixStream.setY((int) mAudienceFrameLayout.getY() / 3);
-            audienceMixStream.setWidth(mAudienceFrameLayout.getWidth() / 2);
-            audienceMixStream.setHeight(mAudienceFrameLayout.getHeight() / 2);
-            audienceMixStream.setZOrder(2);
-            audienceMixStream.setMixSourceType(InteractiveBaseUtil.covertVideoStreamType2MixSourceType(audienceUserData.videoStreamType));
+            audienceMixStream.userId = audienceUserData.userId;
+            audienceMixStream.x = (int) mAudienceFrameLayout.getX() / 3;
+            audienceMixStream.y = (int) mAudienceFrameLayout.getY() / 3;
+            audienceMixStream.width = mAudienceFrameLayout.getWidth() / 2;
+            audienceMixStream.height = mAudienceFrameLayout.getHeight() / 2;
+            audienceMixStream.zOrder = 2;
+            audienceMixStream.mixSourceType = InteractiveBaseUtil.covertVideoStreamType2MixSourceType(audienceUserData.videoStreamType);
+            audienceMixStream.backgroundImageUrl = "https://alivc-demo-cms.alicdn.com/versionProduct/resources/pictures/lantu.jpg";
 
             mixStreams.add(audienceMixStream);
             Log.d(TAG, "audienceMixStream: " + audienceMixStream);
         }
 
         AlivcLiveTranscodingConfig transcodingConfig = new AlivcLiveTranscodingConfig();
-        transcodingConfig.setMixStreams(mixStreams);
+        transcodingConfig.mixStreams = mixStreams;
         mAlivcLivePusher.setLiveMixTranscodingConfig(transcodingConfig);
     }
 
@@ -116,16 +118,17 @@ public class InteractLiveManager extends InteractLiveBaseManager {
         }
 
         AlivcLiveMixStream anchorMixStream = new AlivcLiveMixStream();
-        anchorMixStream.setUserId(anchorUserData.userId);
-        anchorMixStream.setX(0);
-        anchorMixStream.setY(0);
-        anchorMixStream.setWidth(mAlivcLivePushConfig.getWidth());
-        anchorMixStream.setHeight(mAlivcLivePushConfig.getHeight());
-        anchorMixStream.setZOrder(1);
-        anchorMixStream.setMixSourceType(InteractiveBaseUtil.covertVideoStreamType2MixSourceType(anchorUserData.videoStreamType));
+        anchorMixStream.userId = anchorUserData.userId;
+        anchorMixStream.x = 0;
+        anchorMixStream.y = 0;
+        anchorMixStream.width = mAlivcLivePushConfig.getWidth();
+        anchorMixStream.height = mAlivcLivePushConfig.getHeight();
+        anchorMixStream.zOrder = 1;
+        anchorMixStream.mixSourceType = InteractiveBaseUtil.covertVideoStreamType2MixSourceType(anchorUserData.videoStreamType);
+        anchorMixStream.backgroundImageUrl = "https://alivc-demo-cms.alicdn.com/versionProduct/resources/pictures/siheng.jpg";
 
         mMultiInteractLiveMixStreamsArray.add(anchorMixStream);
-        mMixInteractLiveTranscodingConfig.setMixStreams(mMultiInteractLiveMixStreamsArray);
+        mMixInteractLiveTranscodingConfig.mixStreams = mMultiInteractLiveMixStreamsArray;
 
         mAlivcLivePusher.setLiveMixTranscodingConfig(mMixInteractLiveTranscodingConfig);
     }
@@ -143,19 +146,18 @@ public class InteractLiveManager extends InteractLiveBaseManager {
         }
 
         AlivcLiveMixStream audienceMixStream = new AlivcLiveMixStream();
-        audienceMixStream.setUserId(audienceUserData.userId);
-        audienceMixStream.setX((int) frameLayout.getX() / 3);
-        audienceMixStream.setY((int) frameLayout.getY() / 3);
-        audienceMixStream.setWidth(frameLayout.getWidth() / 3);
-        audienceMixStream.setHeight(frameLayout.getHeight() / 3);
-        audienceMixStream.setZOrder(2);
-        audienceMixStream.setMixSourceType(InteractiveBaseUtil.covertVideoStreamType2MixSourceType(audienceUserData.videoStreamType));
+        audienceMixStream.userId = audienceUserData.userId;
+        audienceMixStream.x = (int) frameLayout.getX() / 3;
+        audienceMixStream.y = (int) frameLayout.getY() / 3;
+        audienceMixStream.width = frameLayout.getWidth() / 3;
+        audienceMixStream.height = frameLayout.getHeight() / 3;
+        audienceMixStream.zOrder = 2;
+        audienceMixStream.mixSourceType = InteractiveBaseUtil.covertVideoStreamType2MixSourceType(audienceUserData.videoStreamType);
+        audienceMixStream.backgroundImageUrl = "https://alivc-demo-cms.alicdn.com/versionProduct/resources/pictures/yiliang.png";
 
         mMultiInteractLiveMixStreamsArray.add(audienceMixStream);
-        Log.d(TAG, "audienceMixStream --- " + audienceMixStream.getUserId() + ", " + audienceMixStream.getWidth() + ", " + audienceMixStream.getHeight()
-                + ", " + audienceMixStream.getX() + ", " + audienceMixStream.getY() + ", " + audienceMixStream.getZOrder());
 
-        mMixInteractLiveTranscodingConfig.setMixStreams(mMultiInteractLiveMixStreamsArray);
+        mMixInteractLiveTranscodingConfig.mixStreams = mMultiInteractLiveMixStreamsArray;
 
         mAlivcLivePusher.setLiveMixTranscodingConfig(mMixInteractLiveTranscodingConfig);
     }
@@ -176,18 +178,14 @@ public class InteractLiveManager extends InteractLiveBaseManager {
         mMultiInteractLiveMixStreamsArray.remove(mixStream);
 
         //Array 中只剩主播 id，说明无人连麦
-        if (mMultiInteractLiveMixStreamsArray.size() == 1 && mMultiInteractLiveMixStreamsArray.get(0).getUserId().equals(anchorId)) {
+        if (mMultiInteractLiveMixStreamsArray.size() == 1 && mMultiInteractLiveMixStreamsArray.get(0).userId.equals(anchorId)) {
             clearLiveMixTranscodingConfig();
         } else {
-            mMixInteractLiveTranscodingConfig.setMixStreams(mMultiInteractLiveMixStreamsArray);
+            mMixInteractLiveTranscodingConfig.mixStreams = mMultiInteractLiveMixStreamsArray;
             if (mAlivcLivePusher != null) {
                 mAlivcLivePusher.setLiveMixTranscodingConfig(mMixInteractLiveTranscodingConfig);
             }
         }
-    }
-
-    public void muteLocalCamera(boolean muteLocalCamera) {
-        mAlivcLivePusher.muteLocalCamera(muteLocalCamera);
     }
 
     /**

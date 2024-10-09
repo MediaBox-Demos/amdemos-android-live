@@ -91,6 +91,10 @@
     <string name="camera_setting">相机控制</string>
     <string name="front_camera">前置摄像头</string>
     <string name="auto_focus">自动对焦</string>
+    <string name="camera_capture_output_preference">摄像头采集偏好</string>
+    <string name="camera_capture_output_preference_auto">自动</string>
+    <string name="camera_capture_output_preference_performance">性能</string>
+    <string name="camera_capture_output_preference_preview">高清预览</string>
     <string name="beauty_setting">美颜开关</string>
     <string name="beauty_enable">开启美颜</string>
     <string name="image_push">图片推流</string>
@@ -114,11 +118,11 @@
     <string name="tv_sei_payload">payload</string>
 
     <string name="local_record_tv">本地录制</string>
+    <string name="manual_create_egl_context_tv">手动创建EGLContext</string>
     <string name="sei_send_custom_message_tv">发送自定义消息</string>
 
     <string name="backdoor_title">Live Push Demo配置页面</string>
     <string name="backdoor_tip">用于手动配置demo相应功能</string>
-    <string name="backdoor_bare_stream">推拉裸流</string>
     <string name="backdoor_multi_pk_16in">16方多人PK</string>
 
 </resources>

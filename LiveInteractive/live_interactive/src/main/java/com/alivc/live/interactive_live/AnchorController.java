@@ -35,8 +35,6 @@ public class AnchorController {
     // 连麦观众信息
     private InteractiveUserData mAudienceUserData;
 
-    private boolean mEnableSpeakerPhone = false;
-
     public AnchorController(Context context, InteractiveUserData userData) {
         mAnchorUserData = userData;
 
@@ -54,8 +52,22 @@ public class AnchorController {
                 .setAudioChannel(1)
                 .setAudioBufferSize(2048)
                 .build();
+
+        // 1v1连麦场景下，如果开启了1080P相机采集，同时设置回调低分辨率texture
+        boolean useResolution1080P = LivePushGlobalConfig.mAlivcLivePushConfig.getResolution() == AlivcResolutionEnum.RESOLUTION_1080P;
+        if (useResolution1080P) {
+            HashMap<String, String> extras = new HashMap<>();
+            extras.put("user_specified_observer_texture_low_resolution", "TRUE");
+            LivePushGlobalConfig.mAlivcLivePushConfig.setExtras(extras);
+        }
+
         mInteractLiveManager = new InteractLiveManager();
         mInteractLiveManager.init(context, InteractiveMode.INTERACTIVE);
+
+        // 1v1连麦场景下，如果开启了1080P相机采集，同时设置回调低分辨率texture
+        if (useResolution1080P) {
+            mInteractLiveManager.changeResolution(AlivcResolutionEnum.RESOLUTION_540P);
+        }
     }
 
     /**
@@ -129,10 +141,6 @@ public class AnchorController {
         return mInteractLiveManager.isPulling(mAudienceUserData);
     }
 
-    public void switchCamera() {
-        mInteractLiveManager.switchCamera();
-    }
-
     public void resume() {
         mInteractLiveManager.resumePush();
         mInteractLiveManager.resumePlayRTCStream(mAudienceUserData);
@@ -161,13 +169,20 @@ public class AnchorController {
         mInteractLiveManager.setInteractLivePushPullListener(listener);
     }
 
+    public void switchCamera() {
+        mInteractLiveManager.switchCamera();
+    }
+
+    public void enableSpeakerPhone(boolean enable) {
+        mInteractLiveManager.enableSpeakerPhone(enable);
+    }
+
     public void setMute(boolean b) {
         mInteractLiveManager.setMute(b);
     }
 
-    public void changeSpeakerPhone() {
-        mEnableSpeakerPhone = !mEnableSpeakerPhone;
-        mInteractLiveManager.enableSpeakerPhone(mEnableSpeakerPhone);
+    public void enableAudioCapture(boolean enable) {
+        mInteractLiveManager.enableAudioCapture(enable);
     }
 
     public void muteLocalCamera(boolean muteLocalCamera) {

@@ -38,6 +38,8 @@ public class PushConfigDialogImpl {
             return Arrays.asList(context.getResources().getString(R.string.display_mode_full), context.getResources().getString(R.string.display_mode_fit), context.getResources().getString(R.string.display_mode_cut));
         } else if (id == R.id.push_mode) {
             return Arrays.asList(context.getResources().getString(R.string.video_push_streaming), context.getResources().getString(R.string.audio_only_push_streaming), context.getResources().getString(R.string.video_only_push_streaming));
+        } else if (id == R.id.setting_camera_capture_output_preference) {
+            return Arrays.asList(context.getResources().getString(R.string.camera_capture_output_preference_auto), context.getResources().getString(R.string.camera_capture_output_preference_performance), context.getResources().getString(R.string.camera_capture_output_preference_preview));
         }
         return null;
     }

@@ -11,7 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alivc.live.interactive_common.widget.InteractiveControlView;
+import com.alivc.live.commonui.widgets.ResizableFrameLayout;
+import com.alivc.live.interactive_common.widget.InteractivePaneControlView;
 import com.alivc.live.interactive_common.widget.RoomAndUserInfoView;
 
 import java.util.HashMap;
@@ -102,8 +103,8 @@ public class MultiPKLiveRecyclerViewAdapter extends RecyclerView.Adapter<MultiPK
     public class MultiPKLiveViewHolder extends RecyclerView.ViewHolder {
 
         private final RoomAndUserInfoView mUserInfoView;
-        private InteractiveControlView mUserCtrlView;
-        private final FrameLayout mOtherFrameLayout;
+        private InteractivePaneControlView mUserCtrlView;
+        private final ResizableFrameLayout mOtherFrameLayout;
         private final FrameLayout mUnConnectFrameLayout;
         private final TextView mConnectTextView;
 
@@ -113,7 +114,7 @@ public class MultiPKLiveRecyclerViewAdapter extends RecyclerView.Adapter<MultiPK
 
             mUserCtrlView = itemView.findViewById(R.id.view_ctrl);
             mUserCtrlView.enableMute(true);
-            mUserCtrlView.initListener(new InteractiveControlView.OnClickEventListener() {
+            mUserCtrlView.setOnClickEventListener(new InteractivePaneControlView.OnClickEventListener() {
                 @Override
                 public void onClickMuteAudio(boolean mute) {
                     if (mListener != null) {
@@ -126,6 +127,11 @@ public class MultiPKLiveRecyclerViewAdapter extends RecyclerView.Adapter<MultiPK
                     if (mListener != null) {
                         mListener.onEmptyView(getAdapterPosition(), empty);
                     }
+                }
+
+                @Override
+                public void onClickResize(boolean resize) {
+                    mOtherFrameLayout.resize();
                 }
             });
 

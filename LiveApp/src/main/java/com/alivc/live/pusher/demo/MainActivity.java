@@ -43,10 +43,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout mLivePullRtcLayout;
     private LinearLayout mLiveInteractLayout;
     private LinearLayout mPKLiveInteractLayout;
+    private LinearLayout mInteractiveUrlLayout;
+
     private TextView mVersion;//推流sdk版本号
     private String mPushUrl;
     private TextView mAliyunSDKPrivacy;
-    private LinearLayout mInteractiveUrlLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,14 +103,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
+
         mAliyunSDKPrivacy = findViewById(R.id.aliyun_sdk_privacy);
         mAliyunSDKPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
 
         mLiveInteractLayout.setVisibility(AlivcLiveBase.isSupportLiveMode(AlivcLiveMode.AlivcLiveInteractiveMode) ? View.VISIBLE : View.GONE);
         mPKLiveInteractLayout.setVisibility(AlivcLiveBase.isSupportLiveMode(AlivcLiveMode.AlivcLiveInteractiveMode) ? View.VISIBLE : View.GONE);
-        // 推拉裸流为定制功能，仅针对于有定制需求的客户开放使用；为避免客户理解错乱，故对外演示demo隐藏此入口。
-        boolean isShowBareStream = AlivcLiveBase.isSupportLiveMode(AlivcLiveMode.AlivcLiveInteractiveMode) && BackDoorInstance.getInstance().isShowBareStream();
-        mInteractiveUrlLayout.setVisibility(isShowBareStream ? View.VISIBLE : View.GONE);
+        mInteractiveUrlLayout.setVisibility(AlivcLiveBase.isSupportLiveMode(AlivcLiveMode.AlivcLiveInteractiveMode) ? View.VISIBLE : View.GONE);
     }
 
     private int mNoPermissionIndex = 0;
@@ -180,8 +180,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent;
         int id = v.getId();
         if (id == R.id.push_enter_layout) {
-            if (FastClickUtil.isFastClick()) {
-                return;//点击间隔 至少1秒
+            if (FastClickUtil.isProcessing()) {
+                return;
             }
             intent = new Intent(MainActivity.this, PushConfigActivity.class);
             if (!TextUtils.isEmpty(mPushUrl)) {
@@ -241,9 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 || PushDemoTestConstants.checkIsPlaceholder(testAppKey)
                 || PushDemoTestConstants.checkIsPlaceholder(testPlayDomain))) {
             // 将开发调试用的appInfo写入到sp里面
-            SharedPreferenceUtils.setAppId(context, testAppID);
-            SharedPreferenceUtils.setAppKey(context, testAppKey);
-            SharedPreferenceUtils.setPlayDomain(context, testPlayDomain);
+            SharedPreferenceUtils.setAppInfo(getApplicationContext(), testAppID, testAppKey, testPlayDomain);
             return false;
         }
 

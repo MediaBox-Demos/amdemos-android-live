@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +15,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alivc.live.commonbiz.testapi.EGLContextTest;
+import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
+import com.alivc.live.commonui.widgets.ResizableFrameLayout;
 import com.alivc.live.commonutils.ToastUtils;
 import com.alivc.live.interactive_common.InteractiveConstants;
 import com.alivc.live.interactive_common.bean.InteractiveUserData;
@@ -26,11 +28,11 @@ import com.alivc.live.interactive_common.utils.InteractLiveIntent;
 import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.interactive_common.widget.ConnectionLostTipsView;
 import com.alivc.live.interactive_common.widget.InteractiveCommonInputView;
-import com.alivc.live.interactive_common.widget.InteractiveControlView;
-import com.alivc.live.interactive_common.widget.InteractiveSettingView;
+import com.alivc.live.interactive_common.widget.InteractiveRoomControlView;
 import com.alivc.live.interactive_common.widget.RoomAndUserInfoView;
 import com.alivc.live.player.annotations.AlivcLivePlayError;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +54,7 @@ public class MultiPKLiveActivity extends AppCompatActivity {
     private ImageView mCloseImageView;
     private TextView mShowConnectTextView;
 
-    private FrameLayout mOwnerFrameLayout;
+    private ResizableFrameLayout mOwnerFrameLayout;
     private RoomAndUserInfoView mOwnerInfoView;
 
     private RecyclerView mRecyclerView;
@@ -70,8 +72,10 @@ public class MultiPKLiveActivity extends AppCompatActivity {
     //停止 PK 时需要的 roomId 和 userId
     private InteractiveUserData mStopPKUserData;
     private ConnectionLostTipsView mConnectionLostTipsView;
-    private boolean mIsMute = false;
-    private InteractiveSettingView mInteractiveSettingView;
+    private InteractiveRoomControlView mInteractiveRoomControlView;
+    private AutoScrollMessagesView mSeiMessageView;
+
+    private InteractiveUserData mAnchorUserData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +107,19 @@ public class MultiPKLiveActivity extends AppCompatActivity {
         mShowConnectTextView = findViewById(R.id.tv_show_connect);
 
         mHomeIdTextView = findViewById(R.id.tv_home_id);
+        mHomeIdTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Thread thread = new Thread(() -> EGLContextTest.testGLContext());
+                mSeiMessageView.appendMessage("Manual Create EGLContext: " + thread.getName());
+                thread.start();
+            }
+        });
 
         mConnectionLostTipsView = new ConnectionLostTipsView(this);
 
-        mInteractiveSettingView = findViewById(R.id.interactive_setting_view);
+        mInteractiveRoomControlView = findViewById(R.id.interactive_setting_view);
+        mSeiMessageView = findViewById(R.id.sei_receive_view);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, isScene16In ? 4 : 2);
         gridLayoutManager.setOrientation(GridLayoutManager.HORIZONTAL);
@@ -124,31 +137,34 @@ public class MultiPKLiveActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        mInteractiveSettingView.setOnInteractiveSettingListener(new InteractiveSettingView.OnInteractiveSettingListener() {
+        mInteractiveRoomControlView.setOnClickEventListener(new InteractiveRoomControlView.OnClickEventListener() {
             @Override
-            public void onSwitchCameraClick() {
+            public void onClickSwitchCamera() {
                 mPKController.switchCamera();
             }
 
             @Override
-            public void onMuteClick() {
-                mPKController.setMute(!mIsMute);
-                mIsMute = !mIsMute;
-                mInteractiveSettingView.changeMute(mIsMute);
+            public void onClickSpeakerPhone(boolean enable) {
+                mPKController.enableSpeakerPhone(enable);
             }
 
             @Override
-            public void onSpeakerPhoneClick() {
-                mPKController.changeSpeakerPhone();
+            public void onClickMuteAudio(boolean mute) {
+                mPKController.setMute(mute);
             }
 
             @Override
-            public void onEnableAudioClick(boolean enable) {
+            public void onClickEnableAudio(boolean enable) {
                 mPKController.enableAudioCapture(enable);
             }
 
             @Override
-            public void onEnableVideoClick(boolean enable) {
+            public void onClickMuteVideo(boolean mute) {
+                mPKController.muteLocalCamera(mute);
+            }
+
+            @Override
+            public void onClickEnableVideo(boolean enable) {
                 mPKController.enableLocalCamera(enable);
             }
         });
@@ -220,7 +236,7 @@ public class MultiPKLiveActivity extends AppCompatActivity {
             @Override
             public void onPKMuteClick(int position, boolean mute) {
                 String userKey = getUserKeyByPosition(position);
-                mPKController.muteAnchor(userKey, mute);
+                mPKController.mutePKAnchor(userKey, mute);
             }
 
             @Override
@@ -241,6 +257,7 @@ public class MultiPKLiveActivity extends AppCompatActivity {
         InteractiveUserData anchorUserData = (InteractiveUserData) getIntent().getSerializableExtra(InteractiveConstants.DATA_TYPE_INTERACTIVE_USER_DATA);
 
         mPKController = new PKController(this, anchorUserData);
+        mAnchorUserData = anchorUserData;
 
         mPKController.setMultiPKLivePushPullListener(new InteractLivePushPullListener() {
             @Override
@@ -321,6 +338,18 @@ public class MultiPKLiveActivity extends AppCompatActivity {
             public void onPushError() {
                 super.onPushError();
             }
+
+            @Override
+            public void onReceiveSEIMessage(int payload, byte[] data) {
+                super.onReceiveSEIMessage(payload, data);
+                mSeiMessageView.appendMessage("[rtc] payload=" + payload + ", " + new String(data, StandardCharsets.UTF_8));
+            }
+
+            @Override
+            public void onReceiveSEIDelay(String src, String type, String msg) {
+                super.onReceiveSEIDelay(src, type, msg);
+                mSeiMessageView.appendMessage("[" + src + "][" + type + "][" + msg + "ms]");
+            }
         });
 
         mPKController.startPush(mOwnerFrameLayout);
@@ -335,6 +364,7 @@ public class MultiPKLiveActivity extends AppCompatActivity {
         InteractiveCommonInputView commonInputView = new InteractiveCommonInputView(MultiPKLiveActivity.this);
         commonInputView.setViewType(InteractiveCommonInputView.ViewType.PK);
         commonInputView.showInputView(content, showInputView);
+        commonInputView.setDefaultRoomId(mAnchorUserData != null ? mAnchorUserData.channelId : "");
         mAUILiveDialog.setContentView(commonInputView);
         mAUILiveDialog.show();
 

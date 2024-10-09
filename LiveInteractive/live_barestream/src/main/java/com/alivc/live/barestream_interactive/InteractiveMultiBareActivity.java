@@ -32,7 +32,7 @@ import com.alivc.live.interactive_common.utils.InteractLiveIntent;
 import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.interactive_common.widget.ConnectionLostTipsView;
 import com.alivc.live.interactive_common.widget.InteractiveCommonInputView;
-import com.alivc.live.interactive_common.widget.InteractiveSettingView;
+import com.alivc.live.interactive_common.widget.InteractiveRoomControlView;
 import com.alivc.live.player.annotations.AlivcLivePlayError;
 
 import java.util.ArrayList;
@@ -59,7 +59,6 @@ public class InteractiveMultiBareActivity extends AppCompatActivity {
     private FrameLayout mBigFrameLayout;
     //小窗口
     private ConnectionLostTipsView mConnectionLostTipsView;
-    private boolean mIsMute = false;
 
     //输入 URL 方式连麦
     private InteractiveUserData mPushUserData;
@@ -69,7 +68,7 @@ public class InteractiveMultiBareActivity extends AppCompatActivity {
     private InteractiveUserData mPullUserData3;
 
     private InteractiveCommonInputView commonInputView;
-    private InteractiveSettingView mInteractiveSettingView;
+    private InteractiveRoomControlView mInteractiveRoomControlView;
     private MultiBareStreamController mBareStreamController;
     private EditText mInteractivePushUrlEditText;
     private ImageView mPushUrlQrImageView;
@@ -145,7 +144,7 @@ public class InteractiveMultiBareActivity extends AppCompatActivity {
         mCloseImageView = findViewById(R.id.iv_close);
         mShowConnectIdTextView = findViewById(R.id.tv_show_connect);
         mBigFrameLayout = findViewById(R.id.big_fl);
-        mInteractiveSettingView = findViewById(R.id.interactive_setting_view);
+        mInteractiveRoomControlView = findViewById(R.id.interactive_setting_view);
 
         mConnectionLostTipsView = new ConnectionLostTipsView(this);
 
@@ -256,32 +255,35 @@ public class InteractiveMultiBareActivity extends AppCompatActivity {
             showInteractLiveDialog(getResources().getString(R.string.interact_live_leave_room_tips), false);
         });
 
-        mInteractiveSettingView.setOnInteractiveSettingListener(new InteractiveSettingView.OnInteractiveSettingListener() {
+        mInteractiveRoomControlView.setOnClickEventListener(new InteractiveRoomControlView.OnClickEventListener() {
             @Override
-            public void onSwitchCameraClick() {
+            public void onClickSwitchCamera() {
                 mBareStreamController.switchCamera();
             }
 
             @Override
-            public void onMuteClick() {
-                mBareStreamController.setMute(!mIsMute);
-                mIsMute = !mIsMute;
-                mInteractiveSettingView.changeMute(mIsMute);
+            public void onClickSpeakerPhone(boolean enable) {
+                mBareStreamController.enableSpeakerPhone(enable);
             }
 
             @Override
-            public void onSpeakerPhoneClick() {
-                mBareStreamController.changeSpeakerPhone();
+            public void onClickMuteAudio(boolean mute) {
+                mBareStreamController.setMute(mute);
             }
 
             @Override
-            public void onEnableAudioClick(boolean enable) {
-
+            public void onClickMuteVideo(boolean mute) {
+                mBareStreamController.muteLocalCamera(mute);
             }
 
             @Override
-            public void onEnableVideoClick(boolean enable) {
+            public void onClickEnableAudio(boolean enable) {
+                mBareStreamController.enableAudioCapture(enable);
+            }
 
+            @Override
+            public void onClickEnableVideo(boolean enable) {
+                mBareStreamController.enableLocalCamera(enable);
             }
         });
     }

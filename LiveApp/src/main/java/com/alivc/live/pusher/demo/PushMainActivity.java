@@ -70,7 +70,7 @@ public class PushMainActivity extends AUILiveBaseListActivity {
 
     @Override
     public void onListItemClick(ListModel model) {
-        if (FastClickUtil.isFastClick()) {
+        if (FastClickUtil.isProcessing()) {
             return;
         }
         if (!permissionCheck()) {
@@ -208,9 +208,7 @@ public class PushMainActivity extends AUILiveBaseListActivity {
                 || PushDemoTestConstants.checkIsPlaceholder(testAppKey)
                 || PushDemoTestConstants.checkIsPlaceholder(testPlayDomain))) {
             // 将开发调试用的appInfo写入到sp里面
-            SharedPreferenceUtils.setAppId(context, testAppID);
-            SharedPreferenceUtils.setAppKey(context, testAppKey);
-            SharedPreferenceUtils.setPlayDomain(context, testPlayDomain);
+            SharedPreferenceUtils.setAppInfo(getApplicationContext(), testAppID, testAppKey, testPlayDomain);
             return false;
         }
 

@@ -79,7 +79,7 @@ public class InteractiveAppInfoActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                mAppIdClearImageView.setImageResource(TextUtils.isEmpty(editable.toString()) ? R.drawable.scan_icon : R.drawable.ic_close);
+                mAppIdClearImageView.setImageResource(TextUtils.isEmpty(editable.toString()) ? R.drawable.ic_scan_icon : R.drawable.ic_close);
                 changeConfirmTextView(checkEnable());
             }
         });
@@ -95,7 +95,7 @@ public class InteractiveAppInfoActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                mAppKeyClearImageView.setImageResource(TextUtils.isEmpty(editable.toString()) ? R.drawable.scan_icon : R.drawable.ic_close);
+                mAppKeyClearImageView.setImageResource(TextUtils.isEmpty(editable.toString()) ? R.drawable.ic_scan_icon : R.drawable.ic_close);
                 changeConfirmTextView(checkEnable());
             }
         });
@@ -111,7 +111,7 @@ public class InteractiveAppInfoActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                mPlayDomainClearImageView.setImageResource(TextUtils.isEmpty(editable.toString()) ? R.drawable.scan_icon : R.drawable.ic_close);
+                mPlayDomainClearImageView.setImageResource(TextUtils.isEmpty(editable.toString()) ? R.drawable.ic_scan_icon : R.drawable.ic_close);
                 changeConfirmTextView(checkEnable());
             }
         });
@@ -122,9 +122,10 @@ public class InteractiveAppInfoActivity extends AppCompatActivity {
 
         mConfirmTextView.setOnClickListener((view) -> {
             if (checkEnable()) {
-                SharedPreferenceUtils.setAppId(getApplicationContext(), mAppIdEditText.getText().toString());
-                SharedPreferenceUtils.setAppKey(getApplicationContext(), mAppKeyEditText.getText().toString());
-                SharedPreferenceUtils.setPlayDomain(getApplicationContext(), mPlayDomainEditText.getText().toString());
+                String appId = mAppIdEditText.getText().toString();
+                String appKey = mAppKeyEditText.getText().toString();
+                String playDomain = mPlayDomainEditText.getText().toString();
+                SharedPreferenceUtils.setAppInfo(getApplicationContext(), appId, appKey, playDomain);
                 if (!mFromEditor) {
                     ARouter.getInstance()
                             .build("/interactiveCommon/liveInput")

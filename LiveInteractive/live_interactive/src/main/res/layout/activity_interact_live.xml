@@ -51,7 +51,7 @@
         app:layout_constraintStart_toStartOf="@id/iv_close"
         app:layout_constraintTop_toBottomOf="@id/iv_close" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveControlView
+    <com.alivc.live.interactive_common.widget.InteractivePaneControlView
         android:id="@+id/anchor_ctrl_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_home_id"
         app:layout_constraintTop_toBottomOf="@id/tv_home_id" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveSettingView
+    <com.alivc.live.interactive_common.widget.InteractiveRoomControlView
         android:id="@+id/interactive_setting_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,24 +110,13 @@
         app:layout_constraintStart_toStartOf="@id/interactive_setting_view"
         app:layout_constraintTop_toBottomOf="@id/interactive_setting_view"/>
 
-    <ImageView
-        android:id="@+id/iv_mute_local_camera"
-        android:layout_width="22dp"
-        android:layout_height="18dp"
-        android:layout_marginTop="20dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_camera_mute"
-        app:layout_constraintEnd_toEndOf="@id/iv_beauty"
-        app:layout_constraintStart_toStartOf="@id/iv_beauty"
-        app:layout_constraintTop_toBottomOf="@id/iv_beauty" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_mute_local_camera">
+        app:layout_constraintTop_toBottomOf="@+id/iv_beauty">
 
         <com.alivc.live.commonui.widgets.LivePushTextSwitch
             android:id="@+id/btn_show_custom_message"
@@ -153,7 +142,7 @@
         app:layout_constraintStart_toStartOf="@id/connect_view"
         app:layout_constraintTop_toTopOf="@id/connect_view" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveControlView
+    <com.alivc.live.interactive_common.widget.InteractivePaneControlView
         android:id="@+id/audience_ctrl_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

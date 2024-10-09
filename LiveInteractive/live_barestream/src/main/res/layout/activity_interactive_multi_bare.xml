@@ -77,7 +77,7 @@
         android:layout_height="24dp"
         android:layout_margin="5dp"
         android:background="@color/transparent"
-        android:src="@drawable/scan_icon"
+        android:src="@drawable/ic_scan_icon"
         app:layout_constraintBottom_toBottomOf="@id/et_interactive_push_url"
         app:layout_constraintEnd_toEndOf="@id/et_interactive_push_url"
         app:layout_constraintTop_toTopOf="@id/et_interactive_push_url" />
@@ -98,7 +98,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_interactive_push_url" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveSettingView
+    <com.alivc.live.interactive_common.widget.InteractiveRoomControlView
         android:id="@+id/interactive_setting_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

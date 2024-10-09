@@ -62,7 +62,7 @@
         android:id="@+id/iv_app_id_clear"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:src="@drawable/scan_icon"
+        android:src="@drawable/ic_scan_icon"
         app:layout_constraintBottom_toBottomOf="@id/et_app_id"
         app:layout_constraintEnd_toEndOf="@id/et_app_id"
         app:layout_constraintTop_toTopOf="@id/et_app_id" />
@@ -98,7 +98,7 @@
         android:id="@+id/iv_app_key_clear"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:src="@drawable/scan_icon"
+        android:src="@drawable/ic_scan_icon"
         app:layout_constraintBottom_toBottomOf="@id/et_app_key"
         app:layout_constraintEnd_toEndOf="@id/et_app_key"
         app:layout_constraintTop_toTopOf="@id/et_app_key" />
@@ -134,7 +134,7 @@
         android:id="@+id/iv_play_domain_clear"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:src="@drawable/scan_icon"
+        android:src="@drawable/ic_scan_icon"
         app:layout_constraintBottom_toBottomOf="@id/et_play_domain"
         app:layout_constraintEnd_toEndOf="@id/et_play_domain"
         app:layout_constraintTop_toTopOf="@id/et_play_domain" />

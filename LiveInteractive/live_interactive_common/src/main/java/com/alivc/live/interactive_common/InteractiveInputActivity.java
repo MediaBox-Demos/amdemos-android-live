@@ -44,7 +44,6 @@ public class InteractiveInputActivity extends AppCompatActivity {
     private TextView mURLEntranceTv;
     private TextView mInteractiveURLTv;
 
-    private TextView mTitleTv;
     private TextView mSettingTv;
     private TextView mConfirmTv;
     private ImageView mBackIv;
@@ -79,8 +78,9 @@ public class InteractiveInputActivity extends AppCompatActivity {
         mURLEntranceTv = findViewById(R.id.tv_url_entrance);
         mInteractiveURLTv = findViewById(R.id.tv_interactive_url);
 
-        mTitleTv = findViewById(R.id.tv_title);
-        mTitleTv.setText(mSceneType == InteractiveConstants.SCENE_TYPE_PK_LIVE ? getString(R.string.pk_live) : getString(R.string.interact_live));
+        // Update page title
+        TextView titleTv = findViewById(R.id.tv_title);
+        titleTv.setText(mSceneType == InteractiveConstants.SCENE_TYPE_PK_LIVE ? getString(R.string.pk_live) : getString(R.string.interact_live));
 
         mSettingTv = findViewById(R.id.tv_setting);
         mBackIv = findViewById(R.id.iv_back);
@@ -233,10 +233,24 @@ public class InteractiveInputActivity extends AppCompatActivity {
         if (requestCode == CaptureActivity.REQ_CODE) {
             if (resultCode == RESULT_OK) {
                 String pushUrl = data.getStringExtra(CaptureActivity.EXTRA_SCAN_RESULT);
+                if (TextUtils.isEmpty(pushUrl)) {
+                    return;
+                }
                 mInteractiveURLTv.setText(pushUrl);
+                clearInputUserInfo(true);
                 changeConfirmTextView(checkEnable());
                 checkPushURLSDKAppID(pushUrl);
             }
+        }
+    }
+
+    // 清除输入的用户信息
+    private void clearInputUserInfo(boolean useUrl) {
+        if (useUrl) {
+            mUserIdEdt.setText("");
+            mRoomIdEdt.setText("");
+        } else {
+            mInteractiveURLTv.setText("");
         }
     }
 

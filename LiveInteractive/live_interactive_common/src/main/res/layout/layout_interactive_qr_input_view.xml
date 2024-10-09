@@ -35,7 +35,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:padding="8dp"
-        android:src="@drawable/scan_icon"
+        android:src="@drawable/ic_scan_icon"
         app:layout_constraintBottom_toBottomOf="@id/et_interactive_pull_url"
         app:layout_constraintEnd_toEndOf="@id/et_interactive_pull_url"
         app:layout_constraintTop_toTopOf="@id/et_interactive_pull_url" />

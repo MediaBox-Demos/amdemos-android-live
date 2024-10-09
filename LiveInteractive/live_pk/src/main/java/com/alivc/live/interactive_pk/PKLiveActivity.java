@@ -11,13 +11,16 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alivc.live.annotations.AlivcLiveMuteLocalAudioMode;
 import com.alivc.live.annotations.AlivcLiveRecordAudioQuality;
 import com.alivc.live.annotations.AlivcLiveRecordMediaFormat;
 import com.alivc.live.annotations.AlivcLiveRecordStreamType;
 import com.alivc.live.commonbiz.ResourcesConst;
+import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
 import com.alivc.live.commonui.seiview.LivePusherSEIView;
 import com.alivc.live.commonui.widgets.LivePushTextSwitch;
+import com.alivc.live.commonui.widgets.ResizableFrameLayout;
 import com.alivc.live.commonutils.FileUtil;
 import com.alivc.live.commonutils.ToastUtils;
 import com.alivc.live.interactive_common.InteractiveConstants;
@@ -27,14 +30,17 @@ import com.alivc.live.interactive_common.listener.InteractLivePushPullListener;
 import com.alivc.live.interactive_common.listener.InteractLiveTipsViewListener;
 import com.alivc.live.interactive_common.utils.InteractLiveIntent;
 import com.alivc.live.interactive_common.utils.LivePushGlobalConfig;
-import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.interactive_common.widget.ConnectionLostTipsView;
 import com.alivc.live.interactive_common.widget.InteractiveCommonInputView;
-import com.alivc.live.interactive_common.widget.InteractiveControlView;
-import com.alivc.live.interactive_common.widget.InteractiveSettingView;
+import com.alivc.live.interactive_common.widget.InteractivePaneControlView;
+import com.alivc.live.interactive_common.widget.InteractiveRoomControlView;
 import com.alivc.live.interactive_common.widget.RoomAndUserInfoView;
 import com.alivc.live.player.annotations.AlivcLivePlayError;
 import com.alivc.live.pusher.AlivcLiveLocalRecordConfig;
+import com.alivc.live.pusher.AlivcLivePushAudioEffectVoiceChangeMode;
+import com.alivc.live.pusher.AlivcLivePushVideoConfig;
+import com.alivc.live.pusher.AlivcResolutionEnum;
+import com.alivc.live.pusher.AlivcVideoEncodeGopEnum;
 import com.aliyunsdk.queen.menu.QueenBeautyMenu;
 import com.aliyunsdk.queen.menu.QueenMenuPanel;
 
@@ -55,16 +61,15 @@ public class PKLiveActivity extends AppCompatActivity {
     private ImageView mCloseImageView;
     private TextView mConnectTextView;
     private TextView mShowConnectTextView;
-    private FrameLayout mOwnerFrameLayout;
-    private FrameLayout mOtherFrameLayout;
+    private ResizableFrameLayout mOwnerFrameLayout;
+    private ResizableFrameLayout mOtherFrameLayout;
     private FrameLayout mUnConnectFrameLayout;
     private ConnectionLostTipsView mConnectionLostTipsView;
     private RoomAndUserInfoView mOwnerInfoView;
-    private InteractiveControlView mOwnerCtrlView;
+    private InteractivePaneControlView mOwnerCtrlView;
     private RoomAndUserInfoView mOtherInfoView;
-    private InteractiveControlView mOtherCtrlView;
-    private boolean mIsMute = false;
-    private InteractiveSettingView mInteractiveSettingView;
+    private InteractivePaneControlView mOtherCtrlView;
+    private InteractiveRoomControlView mInteractiveRoomControlView;
 
     private AutoScrollMessagesView mSeiMessageView;
     private ImageView mBeautyImageView;
@@ -84,6 +89,8 @@ public class PKLiveActivity extends AppCompatActivity {
     private LivePushTextSwitch mExternalVideoStreamView;
     private LivePushTextSwitch mPushDualAudioView;
     private LivePushTextSwitch mPushScreenShareView;
+    private LivePushTextSwitch mChangeResolutionFPSView;
+    private LivePushTextSwitch mForceEarMonitorView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,15 +128,20 @@ public class PKLiveActivity extends AppCompatActivity {
 
         mOwnerInfoView = findViewById(R.id.owner_info_view);
         mOwnerCtrlView = findViewById(R.id.owner_ctrl_view);
-        mOwnerCtrlView.initListener(new InteractiveControlView.OnClickEventListener() {
+        mOwnerCtrlView.setOnClickEventListener(new InteractivePaneControlView.OnClickEventListener() {
             @Override
             public void onClickMuteAudio(boolean mute) {
-
+                mPKController.setMute(mute);
             }
 
             @Override
             public void onClickEmptyView(boolean empty) {
                 mPKController.updatePreviewView(empty ? null : mOwnerFrameLayout, true);
+            }
+
+            @Override
+            public void onClickResize(boolean resize) {
+                mOwnerFrameLayout.resize();
             }
         });
 
@@ -137,19 +149,24 @@ public class PKLiveActivity extends AppCompatActivity {
 
         mOtherCtrlView = findViewById(R.id.other_ctrl_view);
         mOtherCtrlView.enableMute(true);
-        mOtherCtrlView.initListener(new InteractiveControlView.OnClickEventListener() {
+        mOtherCtrlView.setOnClickEventListener(new InteractivePaneControlView.OnClickEventListener() {
             @Override
             public void onClickMuteAudio(boolean mute) {
-                mPKController.mutePKMixStream(mute);
+                mPKController.mutePKAnchor(mOtherUserData.getKey(), mute);
             }
 
             @Override
             public void onClickEmptyView(boolean empty) {
                 mPKController.setPullView(mOtherUserData, empty ? null : mOtherFrameLayout);
             }
+
+            @Override
+            public void onClickResize(boolean resize) {
+                mOtherFrameLayout.resize();
+            }
         });
 
-        mInteractiveSettingView = findViewById(R.id.interactive_setting_view);
+        mInteractiveRoomControlView = findViewById(R.id.interactive_setting_view);
 
         mConnectionLostTipsView = new ConnectionLostTipsView(this);
 
@@ -233,6 +250,44 @@ public class PKLiveActivity extends AppCompatActivity {
                 mPKController.stopScreenShareStream();
             }
         });
+
+        mChangeResolutionFPSView = findViewById(R.id.btn_change_resolution_and_fps);
+        mChangeResolutionFPSView.setTextViewText(getString(R.string.change_resolution_and_fps));
+        mChangeResolutionFPSView.setOnSwitchToggleListener(isChecked -> {
+            if (isChecked) {
+                AlivcLivePushVideoConfig videoConfig = new AlivcLivePushVideoConfig();
+                videoConfig.resolution = AlivcResolutionEnum.RESOLUTION_540P;
+                videoConfig.initialBitrate = 1200;
+                videoConfig.targetBitrate = 1200;
+                videoConfig.minBitrate = 300;
+                videoConfig.fps = 15;
+                videoConfig.gop = AlivcVideoEncodeGopEnum.GOP_TWO;
+                mPKController.setVideoConfig(videoConfig);
+            } else {
+                AlivcLivePushVideoConfig videoConfig = new AlivcLivePushVideoConfig();
+                videoConfig.resolution = AlivcResolutionEnum.RESOLUTION_720P;
+                videoConfig.initialBitrate = 1800;
+                videoConfig.targetBitrate = 1800;
+                videoConfig.minBitrate = 300;
+                videoConfig.fps = 20;
+                videoConfig.gop = AlivcVideoEncodeGopEnum.GOP_TWO;
+                mPKController.setVideoConfig(videoConfig);
+            }
+        });
+
+        mForceEarMonitorView = findViewById(R.id.btn_force_ear_monitor);
+        mForceEarMonitorView.setTextViewText(getString(R.string.force_ear_monitor));
+        mForceEarMonitorView.setOnSwitchToggleListener(isChecked -> {
+            if (isChecked) {
+                mPKController.setMute(true, AlivcLiveMuteLocalAudioMode.MUTE_ONLY_MIC);
+                mPKController.setAudioEffectVoiceChangeMode(AlivcLivePushAudioEffectVoiceChangeMode.SOUND_EFFECT_BABY_BOY);
+                mPKController.setBGMEarsBack(true);
+            } else {
+                mPKController.setMute(false, AlivcLiveMuteLocalAudioMode.MUTE_ONLY_MIC);
+                mPKController.setAudioEffectVoiceChangeMode(AlivcLivePushAudioEffectVoiceChangeMode.SOUND_EFFECT_OFF);
+                mPKController.setBGMEarsBack(false);
+            }
+        });
     }
 
     private void initListener() {
@@ -262,31 +317,34 @@ public class PKLiveActivity extends AppCompatActivity {
             }
         });
 
-        mInteractiveSettingView.setOnInteractiveSettingListener(new InteractiveSettingView.OnInteractiveSettingListener() {
+        mInteractiveRoomControlView.setOnClickEventListener(new InteractiveRoomControlView.OnClickEventListener() {
             @Override
-            public void onSwitchCameraClick() {
+            public void onClickSwitchCamera() {
                 mPKController.switchCamera();
             }
 
             @Override
-            public void onMuteClick() {
-                mPKController.setMute(!mIsMute);
-                mIsMute = !mIsMute;
-                mInteractiveSettingView.changeMute(mIsMute);
+            public void onClickSpeakerPhone(boolean enable) {
+                mPKController.enableSpeakerPhone(enable);
             }
 
             @Override
-            public void onSpeakerPhoneClick() {
-                mPKController.changeSpeakerPhone();
+            public void onClickMuteAudio(boolean mute) {
+                mPKController.setMute(mute);
             }
 
             @Override
-            public void onEnableAudioClick(boolean enable) {
+            public void onClickEnableAudio(boolean enable) {
                 mPKController.enableAudioCapture(enable);
             }
 
             @Override
-            public void onEnableVideoClick(boolean enable) {
+            public void onClickMuteVideo(boolean mute) {
+                mPKController.muteLocalCamera(mute);
+            }
+
+            @Override
+            public void onClickEnableVideo(boolean enable) {
                 mPKController.enableLocalCamera(enable);
             }
         });

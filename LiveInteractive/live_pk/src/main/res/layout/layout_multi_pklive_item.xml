@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="5dp">
 
-    <FrameLayout
+    <com.alivc.live.commonui.widgets.ResizableFrameLayout
         android:id="@+id/render_container"
         android:layout_width="100dp"
         android:layout_height="0dp"
@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+    </com.alivc.live.commonui.widgets.ResizableFrameLayout>
 
     <com.alivc.live.interactive_common.widget.RoomAndUserInfoView
         android:id="@+id/view_userinfo"
@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="@id/render_container"
         app:layout_constraintTop_toTopOf="@id/render_container" />
 
-    <com.alivc.live.interactive_common.widget.InteractiveControlView
+    <com.alivc.live.interactive_common.widget.InteractivePaneControlView
         android:id="@+id/view_ctrl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

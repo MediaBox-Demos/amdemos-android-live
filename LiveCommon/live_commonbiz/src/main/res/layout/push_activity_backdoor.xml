@@ -35,7 +35,7 @@
         android:padding="10dp">
 
         <com.alivc.live.commonui.widgets.LivePushTextSwitch
-            android:id="@+id/sw_bare_stream"
+            android:id="@+id/sw_force_rtc_pre_env"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

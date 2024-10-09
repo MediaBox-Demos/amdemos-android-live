@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alivc.live.commonbiz.R;
+import com.alivc.live.commonbiz.SharedPreferenceUtils;
 import com.alivc.live.commonui.widgets.LivePushTextSwitch;
 import com.alivc.live.commonutils.AppUtil;
 import com.alivc.live.commonutils.FileUtil;
@@ -34,7 +35,7 @@ public class BackDoorActivity extends AppCompatActivity {
 
     private TextView mInfoTv;
 
-    private LivePushTextSwitch mBareStreamSw;
+    private LivePushTextSwitch mForceRTCPreEnvSw;
     private LivePushTextSwitch mMultiPK16InSw;
 
     @Override
@@ -46,11 +47,15 @@ public class BackDoorActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mBareStreamSw = findViewById(R.id.sw_bare_stream);
-        mBareStreamSw.setTextViewText(getString(R.string.backdoor_bare_stream));
-        mBareStreamSw.setOnSwitchToggleListener(isChecked -> {
-            if (BackDoorInstance.getInstance().isShowBareStream() != isChecked) {
-                BackDoorInstance.getInstance().setShowBareStream(isChecked);
+        mForceRTCPreEnvSw = findViewById(R.id.sw_force_rtc_pre_env);
+        mForceRTCPreEnvSw.setTextViewText(getString(R.string.backdoor_rtc_force_pre_env));
+        mForceRTCPreEnvSw.setOnSwitchToggleListener(isChecked -> {
+            if (BackDoorInstance.getInstance().isForceRTCPreEnvironment() != isChecked) {
+                BackDoorInstance.getInstance().setForceRTCPreEnvironment(isChecked);
+                // 清除当前连麦配置信息
+                SharedPreferenceUtils.setAppInfo(getApplicationContext(), "", "", "");
+                // 退出APP
+                killApp();
             }
         });
 
@@ -88,7 +93,7 @@ public class BackDoorActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mBareStreamSw.setSwitchChecked(BackDoorInstance.getInstance().isShowBareStream());
+        mForceRTCPreEnvSw.setSwitchChecked(BackDoorInstance.getInstance().isForceRTCPreEnvironment());
         mMultiPK16InSw.setSwitchChecked(BackDoorInstance.getInstance().isUseMultiPK16IN());
     }
 
@@ -161,5 +166,18 @@ public class BackDoorActivity extends AppCompatActivity {
         String folderPath = FileUtil.combinePaths(parentPath, "Ali_RTS_Log");
         FileUtil.safeCreateFolder(folderPath);
         return folderPath;
+    }
+
+    /**
+     * 强制退出APP
+     */
+    private static void killApp() {
+        try {
+            Thread.sleep(2 * 1000L);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

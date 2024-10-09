@@ -14,12 +14,14 @@ import com.alivc.live.annotations.AlivcLiveAudioFrameObserverOperationMode;
 import com.alivc.live.annotations.AlivcLiveAudioFrameObserverUserDefinedInfoBitMask;
 import com.alivc.live.annotations.AlivcLiveAudioSource;
 import com.alivc.live.annotations.AlivcLiveMode;
+import com.alivc.live.annotations.AlivcLiveMuteLocalAudioMode;
 import com.alivc.live.annotations.AlivcLiveNetworkQuality;
 import com.alivc.live.annotations.AlivcLivePushKickedOutType;
 import com.alivc.live.annotations.AlivcLiveRecordMediaEvent;
 import com.alivc.live.beauty.BeautyFactory;
 import com.alivc.live.beauty.BeautyInterface;
 import com.alivc.live.beauty.constant.BeautySDKType;
+import com.alivc.live.commonbiz.backdoor.BackDoorInstance;
 import com.alivc.live.commonbiz.seidelay.SEIDelayManager;
 import com.alivc.live.commonbiz.seidelay.SEISourceType;
 import com.alivc.live.commonbiz.seidelay.api.ISEIDelayEventListener;
@@ -43,6 +45,7 @@ import com.alivc.live.pusher.AlivcLiveBase;
 import com.alivc.live.pusher.AlivcLiveLocalRecordConfig;
 import com.alivc.live.pusher.AlivcLiveMixStream;
 import com.alivc.live.pusher.AlivcLivePublishState;
+import com.alivc.live.pusher.AlivcLivePushAudioEffectVoiceChangeMode;
 import com.alivc.live.pusher.AlivcLivePushAudioFrame;
 import com.alivc.live.pusher.AlivcLivePushAudioFrameListener;
 import com.alivc.live.pusher.AlivcLivePushError;
@@ -51,10 +54,12 @@ import com.alivc.live.pusher.AlivcLivePushExternalAudioStreamConfig;
 import com.alivc.live.pusher.AlivcLivePushInfoListener;
 import com.alivc.live.pusher.AlivcLivePushNetworkListener;
 import com.alivc.live.pusher.AlivcLivePushStatsInfo;
+import com.alivc.live.pusher.AlivcLivePushVideoConfig;
 import com.alivc.live.pusher.AlivcLivePusher;
 import com.alivc.live.pusher.AlivcLivePusherRawDataSample;
 import com.alivc.live.pusher.AlivcLiveTranscodingConfig;
 import com.alivc.live.pusher.AlivcPreviewDisplayMode;
+import com.alivc.live.pusher.AlivcResolutionEnum;
 import com.alivc.live.pusher.AlivcSoundFormat;
 
 import java.io.File;
@@ -114,7 +119,7 @@ public class InteractLiveBaseManager {
         mInteractiveMode = interactiveMode;
         mContext = context.getApplicationContext();
         initLivePusher(interactiveMode);
-        initWatermarks();
+//        initWatermarks();
         mSEIDelayManager.registerReceiver(new ISEIDelayEventListener() {
             @Override
             public void onEvent(String src, String type, String msg) {
@@ -153,6 +158,18 @@ public class InteractLiveBaseManager {
         // 如果需要开启 Data Channel 自定义消息通道，以代替 SEI 功能，需要预先开启 Data Channel 自定义消息通道
         if (LivePushGlobalConfig.IS_DATA_CHANNEL_MESSAGE_ENABLE) {
             mAlivcLivePushConfig.setEnableDataChannelMessage(true);
+        }
+
+        // 开启强制耳返
+        HashMap<String, String> earbackExtras = new HashMap<>(4);
+        earbackExtras.put("earback_open_when_without_headset", LivePushGlobalConfig.IS_EARBACK_OPEN_WITHOUT_HEADSET ? "TRUE" : "FALSE");
+        mAlivcLivePushConfig.setExtras(earbackExtras);
+
+        // Demo逻辑，用于测试，请勿follow！如果强制RTC预发环境，那么增加extra配置
+        if (BackDoorInstance.getInstance().isForceRTCPreEnvironment()) {
+            HashMap<String, String> extras = new HashMap<>(4);
+            extras.put("user_specified_environment", "PRE_RELEASE");
+            mAlivcLivePushConfig.setExtras(extras);
         }
 
         // 初始化推流引擎
@@ -751,7 +768,33 @@ public class InteractLiveBaseManager {
     }
 
     public void setMute(boolean isMute) {
-        mAlivcLivePusher.setMute(isMute);
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.setMute(isMute);
+        }
+    }
+
+    public void setMute(boolean isMute, AlivcLiveMuteLocalAudioMode muteLocalAudioMode) {
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.setMute(isMute, muteLocalAudioMode);
+        }
+    }
+
+    public void setBGMEarsBack(boolean isOpen) {
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.setBGMEarsBack(isOpen);
+        }
+    }
+
+    public void setAudioEffectVoiceChangeMode(AlivcLivePushAudioEffectVoiceChangeMode voiceChangeMode) {
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.setAudioEffectVoiceChangeMode(voiceChangeMode);
+        }
+    }
+
+    public void setVideoConfig(AlivcLivePushVideoConfig videoConfig) {
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.setVideoConfig(videoConfig);
+        }
     }
 
     public void enableSpeakerPhone(boolean enableSpeakerPhone) {
@@ -766,21 +809,35 @@ public class InteractLiveBaseManager {
         }
     }
 
+    public void muteLocalCamera(boolean muteLocalCamera) {
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.muteLocalCamera(muteLocalCamera);
+        }
+    }
+
     public void enableLocalCamera(boolean enable) {
-        mAlivcLivePusher.enableLocalCamera(enable);
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.enableLocalCamera(enable);
+        }
+    }
+
+    public void changeResolution(AlivcResolutionEnum resolutionEnum) {
+        if (mAlivcLivePusher != null) {
+            mAlivcLivePusher.changeResolution(resolutionEnum);
+        }
     }
 
     public void release() {
         mSEIDelayManager.destroy();
 
-        destroyWatermarks();
+//        destroyWatermarks();
         clearLiveMixTranscodingConfig();
 
         stopPush();
         destroyLivePusher();
 
         mMultiInteractLiveMixStreamsArray.clear();
-        mMixInteractLiveTranscodingConfig.setMixStreams(mMultiInteractLiveMixStreamsArray);
+        mMixInteractLiveTranscodingConfig.mixStreams = mMultiInteractLiveMixStreamsArray;
 
         for (AlivcLivePlayer alivcLivePlayer : mInteractiveLivePlayerMap.values()) {
             alivcLivePlayer.stopPlay();
@@ -808,8 +865,8 @@ public class InteractLiveBaseManager {
         }
 
         for (AlivcLiveMixStream alivcLiveMixStream : mMultiInteractLiveMixStreamsArray) {
-            if (userData.userId.equals(alivcLiveMixStream.getUserId())
-                    && alivcLiveMixStream.getMixSourceType() == InteractiveBaseUtil.covertVideoStreamType2MixSourceType(userData.videoStreamType)) {
+            if (userData.userId.equals(alivcLiveMixStream.userId)
+                    && alivcLiveMixStream.mixSourceType == InteractiveBaseUtil.covertVideoStreamType2MixSourceType(userData.videoStreamType)) {
                 return alivcLiveMixStream;
             }
         }
@@ -861,6 +918,11 @@ public class InteractLiveBaseManager {
     private static final AlivcLiveAudioFrameObserverOperationMode AUDIO_FRAME_OBSERVER_MODE = AlivcLiveAudioFrameObserverOperationMode.READ_WRITE;
     private static final AlivcLiveAudioFrameObserverUserDefinedInfoBitMask AUDIO_FRAME_OBSERVER_BIT_MASK = AlivcLiveAudioFrameObserverUserDefinedInfoBitMask.MIX_EXTERNAL_CAPTURE;
 
+    /**
+     * 设置音频裸数据回调
+     * <p>
+     * 注意：该接口较耗时，会影响性能，如果不需要对音频裸数据进行前处理，建议关闭
+     */
     public void enableAudioFrameObserver(boolean enable) {
         if (mAlivcLivePusher == null) {
             return;
@@ -874,40 +936,46 @@ public class InteractLiveBaseManager {
             mAlivcLivePusher.setLivePushAudioFrameListener(new AlivcLivePushAudioFrameListener() {
                 @Override
                 public boolean onCapturedAudioFrame(AlivcLivePushAudioFrame audioFrame) {
-                    // 清空 byte buffer，测试是否生效
-                    Arrays.fill(audioFrame.data, (byte) 0);
-                    return true;
+                    // 设置 enableAudioFrameObserver 接口中的 AlivcLiveAudioSource 为 CAPTURED，会执行该回调
+                    // do audio process here, and then, return true value if audio data need to be rewrited
+                    return false;
                 }
 
                 @Override
                 public boolean onProcessCapturedAudioFrame(AlivcLivePushAudioFrame audioFrame) {
-                    // 清空 byte buffer，测试是否生效
-                    Arrays.fill(audioFrame.data, (byte) 0);
-                    return true;
+                    // 设置 enableAudioFrameObserver 接口中的 AlivcLiveAudioSource 为 PROCESS_CAPTURED，会执行该回调
+                    // do audio process here, and then, return true value if audio data need to be rewrited
+                    return false;
+
+//                    // 清空 byte buffer，测试是否生效
+//                    Arrays.fill(audioFrame.data, (byte) 0);
+//                    return true;
                 }
 
                 @Override
                 public boolean onPublishAudioFrame(AlivcLivePushAudioFrame audioFrame) {
-                    // 清空 byte buffer；注意：设置 AlivcLiveAudioSource.PUB 时，只能读不能写
-                    Arrays.fill(audioFrame.data, (byte) 0);
-                    return true;
+                    // 设置 enableAudioFrameObserver 接口中的 AlivcLiveAudioSource 为 PUB，会执行该回调
+                    // do audio process here, and then, return true value if audio data need to be rewrited
+                    return false;
                 }
 
                 @Override
                 public boolean onPlaybackAudioFrame(AlivcLivePushAudioFrame audioFrame) {
-                    // 清空 byte buffer，测试是否生效
-                    Arrays.fill(audioFrame.data, (byte) 0);
-                    return true;
+                    // 设置 enableAudioFrameObserver 接口中的 AlivcLiveAudioSource 为 PLAYBACK，会执行该回调
+                    // do audio process here, and then, return true value if audio data need to be rewrited
+                    return false;
                 }
 
                 @Override
                 public boolean onMixedAllAudioFrame(AlivcLivePushAudioFrame audioFrame) {
-                    // 清空 byte buffer；注意：设置 AlivcLiveAudioSource.MIXED_ALL 时，只能读不能写
-                    Arrays.fill(audioFrame.data, (byte) 0);
-                    return true;
+                    // 设置 enableAudioFrameObserver 接口中的 AlivcLiveAudioSource 为 MIXED_ALL，会执行该回调
+                    // 注意：设置 AlivcLiveAudioSource.MIXED_ALL 时，只能读不能写
+                    // do audio process here, and then, return true value if audio data need to be rewrited
+                    return false;
                 }
             });
         } else {
+            // please ensure the callback unregistration to prevent memory leaks
             mAlivcLivePusher.enableAudioFrameObserver(false, AUDIO_FRAME_OBSERVER_SOURCE, null);
             mAlivcLivePusher.setLivePushAudioFrameListener(null);
         }
@@ -958,12 +1026,14 @@ public class InteractLiveBaseManager {
         String soundEffectPath3 = mContext.getFilesDir().getPath() + File.separator + SOUND_EFFECT_ASSETS_PATH + "sound_effect_sinister_smile.mp3";
 
         AlivcLiveAudioEffectConfig audioEffectConfig1 = new AlivcLiveAudioEffectConfig();
-        audioEffectConfig1.needPublish = true;
+        audioEffectConfig1.needPublish = false;
         audioEffectConfig1.publishVolume = 0;
         audioEffectConfig1.playoutVolume = 0;
 
         AlivcLiveAudioEffectConfig audioEffectConfig2 = new AlivcLiveAudioEffectConfig();
-        audioEffectConfig2.needPublish = false;
+        audioEffectConfig2.needPublish = true;
+        audioEffectConfig2.publishVolume = 100;
+        audioEffectConfig2.playoutVolume = 100;
 
         AlivcLiveAudioEffectConfig audioEffectConfig3 = new AlivcLiveAudioEffectConfig();
         audioEffectConfig3.needPublish = true;
