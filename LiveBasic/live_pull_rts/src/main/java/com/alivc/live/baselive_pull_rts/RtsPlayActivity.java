@@ -1,5 +1,6 @@
 package com.alivc.live.baselive_pull_rts;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.alivc.live.commonui.utils.StatusBarUtil;
 
 import java.util.Locale;
 
@@ -37,6 +40,8 @@ public class RtsPlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //设置屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_rts_play);
 
         mRtsPlayer = new RtsPlayer(this);

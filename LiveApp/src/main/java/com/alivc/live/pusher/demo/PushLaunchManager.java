@@ -1,7 +1,5 @@
 package com.alivc.live.pusher.demo;
 
-import static android.os.Environment.MEDIA_MOUNTED;
-
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
@@ -90,27 +88,32 @@ public class PushLaunchManager {
         AlivcLiveBase.setLogLevel(AlivcLivePushLogLevel.AlivcLivePushLogLevelInfo);
         AlivcLiveBase.setConsoleEnabled(!BuildConfig.DEBUG);
 
-        String logPath = getLogFilePath(context.getApplicationContext(), null);
-        // full log file limited was kLogMaxFileSizeInKB * 5 (parts)
-        int maxPartFileSizeInKB = 100 * 1024 * 1024; //100G
+        String logPath = getLogFilePath(context.getApplicationContext(), "alivc_live");
+        // Log file size limit, total = kLogMaxFileSizeInKB * 5 (parts)
+        int maxPartFileSizeInKB = 100 * 1024 * 1024; // Limit to 100MB for each log part
+
+        // Set up log directory path
         AlivcLiveBase.setLogDirPath(logPath, maxPartFileSizeInKB);
     }
 
     private static String getLogFilePath(@NonNull Context context, String dir) {
-        String logFilePath = "";
-        //判断SD卡是否可用
-        if (MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+        String logFilePath;
+
+        // Check if the external storage is mounted
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             logFilePath = context.getExternalFilesDir(dir).getAbsolutePath();
         } else {
-            //没内存卡就存机身内存
-            logFilePath = context.getFilesDir() + File.separator + dir;
-        }
-        File file = new File(logFilePath);
-        if (!file.exists()) {//判断文件目录是否存在
-            file.mkdirs();
+            // Fallback to internal storage if external storage is not available
+            logFilePath = new File(context.getFilesDir(), dir).getAbsolutePath();
         }
 
-        Log.d(TAG, "log file path: " + logFilePath);
+        // Ensure the directory exists
+        File file = new File(logFilePath);
+        if (!file.exists() && !file.mkdirs()) {
+            Log.e(TAG, "Failed to create log directory: " + logFilePath);
+        }
+
+        Log.d(TAG, "Log file path: " + logFilePath);
         return logFilePath;
     }
 }

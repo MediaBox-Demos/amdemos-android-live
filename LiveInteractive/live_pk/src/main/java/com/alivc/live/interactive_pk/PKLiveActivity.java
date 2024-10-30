@@ -1,5 +1,6 @@
 package com.alivc.live.interactive_pk;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.alivc.live.commonbiz.ResourcesConst;
 import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
 import com.alivc.live.commonui.seiview.LivePusherSEIView;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonui.widgets.LivePushTextSwitch;
 import com.alivc.live.commonui.widgets.ResizableFrameLayout;
 import com.alivc.live.commonutils.FileUtil;
@@ -96,6 +98,8 @@ public class PKLiveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_pklive);
 
         initView();

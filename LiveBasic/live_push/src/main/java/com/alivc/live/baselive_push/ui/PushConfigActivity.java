@@ -11,12 +11,12 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -30,7 +30,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -39,10 +38,11 @@ import com.alivc.live.annotations.AlivcLiveMode;
 import com.alivc.live.baselive_push.R;
 import com.alivc.live.commonbiz.ResourcesDownload;
 import com.alivc.live.commonbiz.SharedPreferenceUtils;
+import com.alivc.live.commonbiz.backdoor.BackDoorActivity;
 import com.alivc.live.commonbiz.backdoor.BackDoorInstance;
 import com.alivc.live.commonbiz.test.PushDemoTestConstants;
-import com.alivc.live.commonbiz.backdoor.BackDoorActivity;
 import com.alivc.live.commonui.configview.LivePushSettingView;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonui.widgets.AVLiveLoadingDialog;
 import com.alivc.live.commonui.widgets.PushWaterMarkDialog;
 import com.alivc.live.commonutils.DownloadUtil;
@@ -112,17 +112,12 @@ public class PushConfigActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setContentView(R.layout.push_setting);
+
         mAlivcLivePushConfig = new AlivcLivePushConfig();
-
-        //启用内置crash捕获机制，它只会捕获sdk内部造成的crash，而app层依然可以捕获到所有的crash，默认值为true
-        //mAlivcLivePushConfig.setEnableSDKCrashMechanism(false);
-
-        //默认有内置播放器，如果有特殊格式需要，可以设置使用阿里云播放器
-        //app层需要额外依赖5.4.1+的播放器
-        //mAlivcLivePushConfig.setUseAliPlayerForBGM(true);
 
         //设置音乐模式
         //mAlivcLivePushConfig.setAudioSceneMode(AlivcAudioSceneModeEnum.AUDIO_SCENE_MUSIC_MODE);
@@ -170,7 +165,20 @@ public class PushConfigActivity extends AppCompatActivity {
 
         SharedPreferenceUtils.setHintTargetBit(getApplicationContext(), AlivcLivePushConstants.BITRATE_540P_RESOLUTION_FIRST.DEFAULT_VALUE_INT_TARGET_BITRATE.getBitrate());
         SharedPreferenceUtils.setHintMinBit(getApplicationContext(), AlivcLivePushConstants.BITRATE_540P_RESOLUTION_FIRST.DEFAULT_VALUE_INT_MIN_BITRATE.getBitrate());
+
         mTabArgsLayout = findViewById(R.id.tab_args_layout);
+        // 测试用，长按推流参数四个字，自动填写rtmp://
+        mTabArgsLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                String filledUrl = mUrl.getText().toString();
+                if (TextUtils.isEmpty(filledUrl) || !(filledUrl.startsWith("rtmp://") || filledUrl.startsWith("artc://"))) {
+                    mUrl.setText("rtmp://");
+                }
+                return false;
+            }
+        });
+
         mTabActionLayout = findViewById(R.id.tab_action_layout);
         mTabArgsView = (View) findViewById(R.id.tab_args_view);
         mTabActionView = (View) findViewById(R.id.tab_action_view);

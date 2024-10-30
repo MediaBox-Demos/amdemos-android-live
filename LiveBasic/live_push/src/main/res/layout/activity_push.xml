@@ -8,13 +8,14 @@
         android:id="@+id/preview_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/alivc_color_black"
         android:visibility="gone" />
 
     <!--  普通模式（默认）下的预览view  -->
     <SurfaceView
         android:id="@+id/preview_view"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone" />
 
     <androidx.viewpager.widget.ViewPager

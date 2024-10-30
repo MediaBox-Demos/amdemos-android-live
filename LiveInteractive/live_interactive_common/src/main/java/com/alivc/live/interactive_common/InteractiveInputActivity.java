@@ -1,12 +1,12 @@
 package com.alivc.live.interactive_common;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +18,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.alivc.live.commonbiz.backdoor.BackDoorInstance;
 import com.alivc.live.commonbiz.test.AliLiveStreamURLUtil;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonutils.TextFormatUtil;
 import com.alivc.live.commonutils.ToastUtils;
 import com.alivc.live.interactive_common.bean.InteractiveUserData;
@@ -59,7 +60,8 @@ public class InteractiveInputActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_interactive_input);
 
         // 获取场景类型

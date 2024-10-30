@@ -2,6 +2,7 @@ package com.alivc.live.commonbiz.backdoor;
 
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alivc.live.commonbiz.R;
 import com.alivc.live.commonbiz.SharedPreferenceUtils;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonui.widgets.LivePushTextSwitch;
 import com.alivc.live.commonutils.AppUtil;
 import com.alivc.live.commonutils.FileUtil;
@@ -41,6 +43,8 @@ public class BackDoorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.push_activity_backdoor);
         initViews();
         initData();

@@ -3,6 +3,7 @@ package com.alivc.live.baselive_pull_rts;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.acker.simplezxing.activity.CaptureActivity;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 
 /**
  * URL 输入界面
@@ -32,6 +34,8 @@ public class InputRtsUrlActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_input_rts_url);
 
         initView();

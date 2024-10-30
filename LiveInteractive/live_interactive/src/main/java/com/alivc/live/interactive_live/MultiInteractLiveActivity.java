@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
@@ -17,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alivc.live.commonbiz.test.AliLiveStreamURLUtil;
+import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
 import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonutils.ToastUtils;
@@ -26,7 +26,6 @@ import com.alivc.live.interactive_common.listener.ConnectionLostListener;
 import com.alivc.live.interactive_common.listener.InteractLivePushPullListener;
 import com.alivc.live.interactive_common.listener.InteractLiveTipsViewListener;
 import com.alivc.live.interactive_common.utils.InteractLiveIntent;
-import com.alivc.live.commonui.avdialog.AUILiveDialog;
 import com.alivc.live.interactive_common.widget.ConnectionLostTipsView;
 import com.alivc.live.interactive_common.widget.InteractiveCommonInputView;
 import com.alivc.live.interactive_common.widget.InteractiveConnectView;
@@ -68,7 +67,6 @@ public class MultiInteractLiveActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         StatusBarUtil.translucent(this, Color.TRANSPARENT);
 

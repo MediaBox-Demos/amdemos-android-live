@@ -8,7 +8,7 @@
             android:alwaysRetainTaskState="true"
             android:configChanges="uiMode"
             android:screenOrientation="portrait"
-            android:theme="@style/AVLiveTheme" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.LivePushActivity"
             android:alwaysRetainTaskState="true"
