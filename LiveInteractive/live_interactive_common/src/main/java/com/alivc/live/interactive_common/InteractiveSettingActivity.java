@@ -3,6 +3,7 @@ package com.alivc.live.interactive_common;
 import static com.alivc.live.interactive_common.utils.LivePushGlobalConfig.mAlivcLivePushConfig;
 
 import android.app.DownloadManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import com.alivc.live.annotations.AlivcLiveCameraCaptureOutputPreference;
 import com.alivc.live.commonbiz.ResourcesDownload;
 import com.alivc.live.commonbiz.SharedPreferenceUtils;
 import com.alivc.live.commonui.configview.LivePushSettingView;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonui.widgets.AVLiveLoadingDialog;
 import com.alivc.live.commonutils.DownloadUtil;
 import com.alivc.live.commonutils.ToastUtils;
@@ -55,6 +57,8 @@ public class InteractiveSettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_interactive_setting);
 
         initView();

@@ -5,12 +5,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,15 +27,15 @@ import com.alivc.live.baselive_pull.ui.PlayerActivity;
 import com.alivc.live.baselive_push.ui.PushConfigActivity;
 import com.alivc.live.baselive_recording.ui.VideoRecordConfigActivity;
 import com.alivc.live.commonbiz.SharedPreferenceUtils;
+import com.alivc.live.commonbiz.backdoor.BackDoorActivity;
 import com.alivc.live.commonbiz.test.PushDemoTestConstants;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonutils.ContextUtils;
 import com.alivc.live.commonutils.FastClickUtil;
 import com.alivc.live.interactive_common.InteractiveAppInfoActivity;
 import com.alivc.live.interactive_common.InteractiveConstants;
 import com.alivc.live.interactive_common.InteractiveInputActivity;
 import com.alivc.live.pusher.AlivcLiveBase;
-import com.alivc.live.commonbiz.backdoor.BackDoorActivity;
-import com.alivc.live.commonbiz.backdoor.BackDoorInstance;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private LinearLayout mLivePushLayout;
@@ -52,9 +52,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        check();
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
+        check();
         setContentView(R.layout.push_activity_main);
         initView();
         if (!permissionCheck()) {

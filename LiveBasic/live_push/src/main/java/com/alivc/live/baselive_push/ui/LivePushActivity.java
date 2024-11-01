@@ -22,7 +22,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -117,12 +116,11 @@ public class LivePushActivity extends AppCompatActivity implements IPushControll
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
 
         mLivePushViewModel = new ViewModelProvider(this).get(LivePushViewModel.class);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        StatusBarUtil.translucent(this, Color.TRANSPARENT);
         mPushUrl = getIntent().getStringExtra(URL_KEY);
         mAsync = getIntent().getBooleanExtra(ASYNC_KEY, false);
         mAudioOnly = getIntent().getBooleanExtra(AUDIO_ONLY_KEY, false);

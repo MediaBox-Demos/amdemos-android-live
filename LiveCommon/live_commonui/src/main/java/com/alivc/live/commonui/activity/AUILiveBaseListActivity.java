@@ -1,5 +1,6 @@
 package com.alivc.live.commonui.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alivc.live.commonui.R;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public abstract class AUILiveBaseListActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawable(null);
         getDelegate().setLocalNightMode(specifiedThemeMode());
         super.onCreate(savedInstanceState);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
         setContentView(R.layout.aui_live_activity_list_layout);
         initBaseView();
         initBaseData();

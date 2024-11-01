@@ -1,6 +1,7 @@
 package com.alivc.live.interactive_pk;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alivc.live.commonbiz.testapi.EGLContextTest;
 import com.alivc.live.commonui.messageview.AutoScrollMessagesView;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.commonui.widgets.ResizableFrameLayout;
 import com.alivc.live.commonutils.ToastUtils;
 import com.alivc.live.interactive_common.InteractiveConstants;
@@ -81,6 +83,8 @@ public class MultiPKLiveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_multi_pklive);
 
         // 是否是全屏16方场景

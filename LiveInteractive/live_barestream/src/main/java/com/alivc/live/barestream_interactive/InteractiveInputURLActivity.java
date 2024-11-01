@@ -3,6 +3,7 @@ package com.alivc.live.barestream_interactive;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.acker.simplezxing.activity.CaptureActivity;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 import com.alivc.live.interactive_common.InteractiveSettingActivity;
 import com.alivc.live.interactive_common.utils.LivePushGlobalConfig;
 import com.alivc.live.interactive_common.widget.InteractiveQrEditView;
@@ -42,6 +44,8 @@ public class InteractiveInputURLActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_interactive_input_url);
 
         initView();

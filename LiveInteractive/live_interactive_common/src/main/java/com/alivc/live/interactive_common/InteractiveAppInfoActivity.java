@@ -3,6 +3,7 @@ package com.alivc.live.interactive_common;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import com.acker.simplezxing.activity.CaptureActivity;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.alivc.live.commonbiz.SharedPreferenceUtils;
+import com.alivc.live.commonui.utils.StatusBarUtil;
 
 public class InteractiveAppInfoActivity extends AppCompatActivity {
 
@@ -42,6 +44,8 @@ public class InteractiveAppInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.translucent(this, Color.TRANSPARENT);
+
         setContentView(R.layout.activity_interactive_app_info);
 
         mFromEditor = getIntent().getBooleanExtra(FROM_EDITOR, false);
