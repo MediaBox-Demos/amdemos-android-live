@@ -42,7 +42,7 @@ dependencies {
     api project(':LiveCommon:live_commonbiz')
     api project(':LiveBeauty:live_queenbeauty')
 
-    if (hasInteractiveLive()) {
+    if (project.hasProperty("sdk_type") && "AliVCSDK_InteractiveLive".equalsIgnoreCase(sdk_type)) {
         api externalLivePusherInteractive
     } else {
         api externalLivePusher

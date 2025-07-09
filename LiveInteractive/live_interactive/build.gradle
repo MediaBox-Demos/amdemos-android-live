@@ -40,7 +40,12 @@ dependencies {
     implementation externalARouter
     annotationProcessor externalARouterCompiler
 
-    implementation externalPlayerFull
+    // Add a downgraded version of the player sdk for the live project single build.
+    if ("true".equalsIgnoreCase(allInOne)) {
+        implementation externalPlayerFull
+    } else {
+        implementation externalPlayerFullDowngrade
+    }
 
     implementation project(':LiveInteractive:live_interactive_common')
 }

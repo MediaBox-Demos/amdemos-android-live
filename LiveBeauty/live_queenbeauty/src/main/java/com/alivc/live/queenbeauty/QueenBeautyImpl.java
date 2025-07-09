@@ -22,9 +22,6 @@ import com.aliyunsdk.queen.param.QueenParam;
 import com.aliyunsdk.queen.param.QueenParamFactory;
 import com.aliyunsdk.queen.param.QueenParamHolder;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * 美颜实现相关类
  *
@@ -36,30 +33,21 @@ import java.util.List;
 public class QueenBeautyImpl implements BeautyInterface {
     private static final String TAG = "QueenBeautyImpl";
 
-    private static final boolean FLAG_ENABLE_DEBUG_LOG = true;
+    // Note keria, 非必要不打开，日志爆表
+    private static final boolean FLAG_ENABLE_DEBUG_LOG = false;
 
     private final Context mContext;
 
-    private final Object mCmdLock = new Object();
-    private final List<Object> mCmdList = new LinkedList<>();
-
-    private long glThreadId = -1;
-
     private QueenBeautyInterface mBeautyImpl;
-    private boolean mLastTextureIsOes = false;
-    private int mLastTextureId = -1;
-    private float[] mLastMatrix = null;
 
-    private int lastTextureWidth = 0;
-    private int lastTextureHeight = 0;
+    private int mLastTextureId = -1;
+    private int mLastTextureWidth = 0;
+    private int mLastTextureHeight = 0;
 
     private int mDeviceOrientation = 0;
     private OrientationEventListener mOrientationListener;
 
     private volatile boolean isBeautyEnable = false;
-    private volatile boolean isAlgDataRendered = false;
-    private boolean isFrameSync = true;
-    private boolean isLicenseValid = true;
 
     public QueenBeautyImpl(Context context) {
         mContext = context;
@@ -71,7 +59,7 @@ public class QueenBeautyImpl implements BeautyInterface {
         if (mBeautyImpl == null) {
             mBeautyImpl = new QueenBeautyWrapper();
             QueenConfig queenConfig = new QueenConfig();
-//            queenConfig.enableDebugLog = true;
+            queenConfig.enableDebugLog = FLAG_ENABLE_DEBUG_LOG;
             mBeautyImpl.init(mContext, queenConfig);
 //            mBeautyImpl.init(mContext);
             mBeautyImpl.setBeautyParams(new IBeautyParamsHolder() {
@@ -134,25 +122,57 @@ public class QueenBeautyImpl implements BeautyInterface {
 
     @Override
     public int onTextureInput(int inputTexture, int textureWidth, int textureHeight) {
-        // 判断美颜license是否生效，如果不生效，不做美颜处理
-        if (!isLicenseValid) {
-            Log.e(TAG, "license for queen sdk is invalid!");
-            return inputTexture;
-        }
-
-        glThreadId = Thread.currentThread().getId();
-
+        // 处理美颜逻辑
         if (mBeautyImpl == null || !isBeautyEnable) {
             return inputTexture;
         }
 
-        mLastTextureId = inputTexture;
-        mLastTextureIsOes = false;
+        handleTextureSizeChange(textureWidth, textureHeight);
 
-        // 刷新当前镜头角度
+        mLastTextureId = inputTexture;
+
+        // 刷新摄像头角度
         refreshCameraAngles();
 
+        adjustAngles();
+
         long now = SystemClock.uptimeMillis();
+
+        int result = mBeautyImpl.onProcessTexture(inputTexture, false, null, textureWidth, textureHeight, inputAngle, outAngle, 2);
+
+        if (FLAG_ENABLE_DEBUG_LOG) {
+            Log.i(TAG, String.format("[%d][%dms], [%d][%dx%d]", Thread.currentThread().getId(), (SystemClock.uptimeMillis() - now), inputTexture, textureWidth, textureHeight));
+        }
+
+        return result;
+    }
+
+    private void handleTextureSizeChange(int textureWidth, int textureHeight) {
+        // 验证纹理的宽度和高度有效
+        if (textureWidth <= 0 || textureHeight <= 0) {
+            return;
+        }
+
+        // 仅在纹理尺寸变化时处理
+        if (mLastTextureWidth != textureWidth || mLastTextureHeight != textureHeight) {
+            // 如果是首次设置，或之前的纹理尺寸有效，将释放之前的美颜实现
+            if (mLastTextureWidth > 0 && mLastTextureHeight > 0) {
+                if (mBeautyImpl != null) {
+                    long now = SystemClock.uptimeMillis();
+                    mBeautyImpl.release();
+                    mBeautyImpl = null;
+                    init();  // 重新初始化美颜实现
+                    Log.e(TAG, String.format("reset queen beauty impl: [%d][%dms], [%dx%d->%dx%d]", Thread.currentThread().getId(), (SystemClock.uptimeMillis() - now), mLastTextureWidth, mLastTextureHeight, textureWidth, textureHeight));
+                }
+            }
+            // 更新最后的纹理尺寸
+            mLastTextureWidth = textureWidth;
+            mLastTextureHeight = textureHeight;
+        }
+    }
+
+    private void adjustAngles() {
+        // 根据摄像头方向设置输入和输出角度
         if (outAngle == 90 || outAngle == 270) {// 右 out = 90 / 左 out = 270
             // 推流的输入纹理经过处理，非原始摄像头采集纹理，这里单独针对角度适配: 右 out = 90 / 左 out = 270
             inputAngle = outAngle;
@@ -163,16 +183,6 @@ public class QueenBeautyImpl implements BeautyInterface {
             inputAngle = outAngle;
             outAngle = 180 - outAngle;
         }
-
-        isAlgDataRendered = true;
-
-        int result = mBeautyImpl.onProcessTexture(inputTexture, false, null, textureWidth, textureHeight, inputAngle, outAngle, 2);
-
-        if (FLAG_ENABLE_DEBUG_LOG) {
-            Log.i(TAG, Thread.currentThread().getId() + " - " + "render : " + (SystemClock.uptimeMillis() - now) + "ms"
-                    + ", textureW: " + textureWidth + ", textureH: " + textureHeight + ", outAngle: " + outAngle);
-        }
-        return result;
     }
 
     @Override
@@ -195,8 +205,7 @@ public class QueenBeautyImpl implements BeautyInterface {
 
             Log.d(TAG, "inputAngle=" + inputAngle + ", outputAngle=" + outputAngle);
 
-//            mMediaChainEngine.updateInputDataAndRunAlg(image, format, width, height, stride, inputAngle, outputAngle, 0);
-            mBeautyImpl.onProcessTextureAndBuffer(mLastTextureId, mLastTextureIsOes, mLastMatrix, width, height, inputAngle, outputAngle, 0, image, format);
+            mBeautyImpl.onProcessTextureAndBuffer(mLastTextureId, false, null, width, height, inputAngle, outputAngle, 0, image, format);
         }
     }
 
@@ -320,19 +329,4 @@ public class QueenBeautyImpl implements BeautyInterface {
         }
         return displayOrientation;
     }
-
-    // 如果引擎未创建或者不是texture线程，先缓存设置
-    private boolean isCurrentTextureThread(Object cmd) {
-        long currentThreadId = Thread.currentThread().getId();
-        if (mBeautyImpl != null && glThreadId == currentThreadId) {
-            return true;
-        }
-
-        Log.w(TAG, "now not in texture thread " + glThreadId + ", " + currentThreadId);
-        synchronized (mCmdLock) {
-            mCmdList.add(cmd);
-        }
-        return false;
-    }
-
 }

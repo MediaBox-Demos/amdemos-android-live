@@ -1,42 +1,44 @@
 # amdemos-android-live
 
-A demo project for Apsara Video Live Push SDK.
+本项目是阿里云推流 SDK 的 Demo 演示工程（API Example），旨在帮助开发者快速了解、集成并测试阿里云推流 SDK 的功能。
 
-## **一、Demo体验**
+----
+
+## **一、Demo 体验**
 
 > **官网文档**：[推流SDK · Demo体验](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes?#section-cra-t8n-o2q)
 
-![DEMO QRCODE](https://alivc-demo-cms.alicdn.com/versionProduct/resources/livePush/demo_qrcode.png)
+通过扫描以下二维码，您可以快速下载并体验 Demo 应用：
 
-## **二、Demo编译**
+![demo-qr-code.png](https://alivc-demo-cms.alicdn.com/versionProduct/installPackage/livePush/demo-qr-code.png)
+
+---
+
+## **二、Demo 编译**
 
 > **官网文档**：[Android推流SDK · Demo编译](https://help.aliyun.com/zh/live/developer-reference/push-sdk-for-android-demo-compilation)
 
-### **1. IDE**
+### **1. 开发环境准备**
 
-* Android Studio
+* **IDE：推荐使用 Android Studio**
 
 > [Download Android Studio & App Tools - Android Developers](https://developer.android.com/studio?hl=zh-cn)
 
-### **2. 环境要求**
-
-* Gradle 7.5-bin，插件版本7.1.2
-
-* **JDK 11**
+* **JDK 版本：JDK 11**
 
 > JDK 11设置方法：Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle -> Gradle JDK -> 选择 11（如果没有11，请升级你的Android Studio版本）
 
-### **3. 项目说明**
+### **2. 项目结构说明**
 
-#### **3.1 模块与架构分层**
+#### **2.1 模块与架构分层**
 
 ![project_design](./project_design.png)
 
-#### **3.2 模块依赖关系**
+#### **2.2 模块依赖关系**
 
 ![module_dependencies](./module_dependencies.png)
 
-#### **3.3 模块说明**
+#### **2.3 模块功能介绍**
 
 ```html
 .
@@ -67,55 +69,62 @@ A demo project for Apsara Video Live Push SDK.
 │   └── wrapper
 ```
 
-#### **3.4 功能介绍**
+#### **2.4 功能列表**
 
-| 功能名称   | 模块名称         | 功能场景         | 推拉流协议                                               |
-| ---------- | ---------------- | ---------------- | -------------------------------------------------------- |
-| 摄像头推流 | live_push        | 推流，摄像头场景 | 基础直播(rtmp/rts 1.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
-| 录屏推流   | live_screencap   | 推流，录屏场景   | 基础直播(rtmp/rts 1.0)                                   |
-| 拉流播放   | live_pull        | 拉流             | 基础直播(rtmp/rts 1.0)，推拉裸流(rts 2.0)                |
-| 连麦互动   | live_interactive | 推拉流，连麦场景 | 互动直播(rtc)                                            |
-| PK互动     | live_pk          | 推拉流，PK场景   | 互动直播(rtc)                                            |
-| 推拉裸流   | live_barestream  | 推拉流           | 推拉裸流(rts 2.0)                                        |
+| 功能名称   | 模块名称         | 功能场景       | 推拉流协议                                                   |
+| ---------- | ---------------- | -------------- | ------------------------------------------------------------ |
+| 摄像头推流 | live_push        | 推流（摄像头） | 基础直播(rtmp/rts 1.0/rts 2.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
+| 录屏推流   | live_screencap   | 推流（录屏）   | 基础直播(rtmp/rts 1.0/rts 2.0)                               |
+| 拉流播放   | live_pull        | 拉流           | 基础直播(rtmp/rts 1.0/rts 2.0)                               |
+| 连麦互动   | live_interactive | 推拉流（连麦） | 互动直播(rtc)                                                |
+| PK互动     | live_pk          | 推拉流（PK）   | 互动直播(rtc)                                                |
+| 推拉裸流   | live_barestream  | 推拉流         | 推拉裸流(rts 2.0)                                            |
 
-## **三、SDK集成**
+----
+
+## **三、SDK 集成**
 
 >  **官网文档**：[Android推流SDK · SDK集成](https://help.aliyun.com/zh/live/developer-reference/integrate-push-sdk-for-android)
 
-### **Android推荐使用maven集成：**
+### **推荐使用 Maven 集成：**
 
-| SDK名称                     | SDK类型       | 功能   | 支持模式           | 推拉流协议                                               |
-| --------------------------- | ------------- | ------ | ------------------ | -------------------------------------------------------- |
-| AlivcLivePusher             | 推流SDK       | 推流   | 基础模式           | 基础直播(rtmp/rts 1.0)                                   |
-| AlivcLivePusher_Interactive | 推流SDK       | 推流   | 基础模式、互动模式 | 基础直播(rtmp/rts 1.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
-| AliVCSDK_BasicLive          | 音视频终端SDK | 推拉流 | 基础模式           | 基础直播(rtmp/rts 1.0)                                   |
-| AliVCSDK_InteractiveLive    | 音视频终端SDK | 推拉流 | 基础模式、互动模式 | 基础直播(rtmp/rts 1.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
-| AliVCSDK_Standard           | 音视频终端SDK | 推拉流 | 基础模式、互动模式 | 基础直播(rtmp/rts 1.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
+| SDK名称                     | SDK类型       | 功能   | 支持模式           | 推拉流协议                                                   |
+| --------------------------- | ------------- | ------ | ------------------ | ------------------------------------------------------------ |
+| AlivcLivePusher             | 推流SDK       | 推流   | 基础模式           | 基础直播(rtmp/rts 1.0/rts 2.0)                               |
+| AlivcLivePusher_Interactive | 推流SDK       | 推流   | 基础模式、互动模式 | 基础直播(rtmp/rts 1.0/rts 2.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
+| AliVCSDK_BasicLive          | 音视频终端SDK | 推拉流 | 基础模式           | 基础直播(rtmp/rts 1.0/rts 2.0)                               |
+| AliVCSDK_InteractiveLive    | 音视频终端SDK | 推拉流 | 基础模式、互动模式 | 基础直播(rtmp/rts 1.0/rts 2.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
+| AliVCSDK_Standard           | 音视频终端SDK | 推拉流 | 基础模式、互动模式 | 基础直播(rtmp/rts 1.0/rts 2.0)，互动直播(rtc)，推拉裸流(rts 2.0) |
 
-#### **1. 在工程build.gradle配置脚本中的dependencies中添加如下代码**
+### **1. 配置License**
 
-- **基础版**
+推流 SDK 需要 License 授权才能正常使用，请参考 [推流 SDK License 集成指南](https://help.aliyun.com/zh/live/developer-reference/integrate-a-push-sdk-license) 完成配置。
 
-```groovy
-implementation "com.alivc.pusher:AlivcLivePusher:${version}"
-```
+### **2. 添加 Maven 源**
 
-- **互动版**
-
-```groovy
-implementation "com.alivc.pusher:AlivcLivePusher_Interactive:${version}"
-```
-
-* **版本更新记录**：[SDK下载与发布记录](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes)
-
-
-#### **2. 在项目build.gradle中增加Maven源**
+在项目的 build.gradle 文件中添加以下 Maven 源地址：
 
 ```groovy
 maven { url 'https://maven.aliyun.com/nexus/content/repositories/releases' }
 ```
 
-#### **3. 在 defaultConfig 中，指定App使用的CPU架构（目前SDK支持armeabi-v7a 和 arm64-v8a，不支持模拟器调试）**
+### **3. 在 build.gradle 中添加依赖**
+
+根据业务需求选择对应的 SDK 版本进行集成：
+
+```groovy
+// 1. 基础版推流 SDK（不支持连麦）
+implementation 'com.alivc.pusher:AlivcLivePusher:x.y.z'
+
+// 2. 互动版推流 SDK（支持连麦）
+implementation 'com.alivc.pusher:AlivcLivePusher_Interactive:x.y.z'
+```
+
+**注意**：`x.y.z` 表示推流 SDK 的版本号。您可以在 [SDK 下载页面](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes) 查看最新稳定版本号，并将其替换为实际值。
+
+### **4. 配置 CPU 架构**
+
+目前 SDK 支持 armeabi-v7a 和 arm64-v8a，不支持模拟器调试。请在 defaultConfig 中配置：
 
 ```groovy
 defaultConfig {
@@ -125,64 +134,64 @@ defaultConfig {
 }
 ```
 
-#### **4. 配置License**
-
-推流SDK需要SDK License授权才可以正常推流，您需要配置License文件。具体操作，请参见[推流SDK License集成指南](https://help.aliyun.com/zh/live/developer-reference/integrate-a-push-sdk-license)。
-
-#### **5. 其它工程配置**
+### **5. 其它工程配置**
 
 * **[配置App权限](https://help.aliyun.com/zh/live/developer-reference/integrate-push-sdk-for-android#12c072b07azus)**
 
 * **[配置混淆规则](https://help.aliyun.com/zh/live/developer-reference/integrate-push-sdk-for-android#5c0354b07anys)**
 
-#### **6. 美颜接入指南**
+----
 
-请参考 **LiveBeauty** 模块下的 README.md 文档，通过 LiveBeauty 插件，一键集成直播美颜功能。
+## **四、常见问题 FAQ**
 
-#### **7. 集成与编译问题指南**
+* **美颜接入指南**
 
-> **官网文档**：[Android推流SDK · 错误异常及特殊场景处理](https://help.aliyun.com/zh/live/developer-reference/handling-of-exceptions-and-special-scenarios-for-android)
+​	参考 **LiveBeauty** 模块下的 `README.md` 文档，通过 LiveBeauty 插件一键集成直播美颜功能。
 
 * **SDK集成问题：集成多个SDK冲突**
 
-如您同时集成 [直播推流SDK](https://help.aliyun.com/zh/live/developer-reference/push-sdk-for-android/) 和 [播放器SDK](https://help.aliyun.com/zh/vod/developer-reference/apsaravideo-player-sdk-for-android/)，或其它阿里云音视频SDK；在组合编译时，部分SDK版本，可能会存在字节码冲突问题（Duplicate class）。请使用 音视频终端SDK 避免冲突，集成方式请参考[标准集成·Android端](https://help.aliyun.com/zh/apsara-video-sdk/developer-reference/fast-integration-for-android)。
+  * 如果同时集成了多个阿里云音视频 SDK（如 [直播推流SDK](https://help.aliyun.com/zh/live/developer-reference/push-sdk-for-android/) 和 [播放器SDK](https://help.aliyun.com/zh/vod/developer-reference/apsaravideo-player-sdk-for-android/)），可能会出现字节码冲突问题（Duplicate class）。
+  * 建议使用**音视频终端 SDK** 避免冲突，集成方式请参考 [标准集成 · Android 端](https://help.aliyun.com/zh/apsara-video-sdk/developer-reference/fast-integration-for-android)。
 
 * **SDK集成方式**
-
-如您希望以 本地aar 形式集成，我们在官网文档[SDK下载与发布记录](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes)中，为您提供了SDK下载包。
-
-如您希望以 音视频终端SDK 形式集成，集成方式请参考[标准集成·Android端](https://help.aliyun.com/zh/apsara-video-sdk/developer-reference/fast-integration-for-android)。
+  * 如您希望以本地 aar 形式集成，我们在官网文档[SDK下载与发布记录](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes)中，为您提供了 SDK 下载包。
+  * 如您希望以音视频终端 SDK 形式集成，集成方式请参考[标准集成·Android端](https://help.aliyun.com/zh/apsara-video-sdk/developer-reference/fast-integration-for-android)。
 
 * **Demo编译配置**
-  
+
   * **基础版 与 互动版 切换**
     
-    * `gradle.properties`文件中`SDK_TYPE`编译配置，决定输出的Demo功能模块
-    * AliVCSDK_BasicLive->基础版，AliVCSDK_InteractiveLive->互动版
-    * 基础版，仅包含基础直播相关功能；互动版（默认），包含基础直播与互动直播功能
+    * `gradle.properties `文件中 `sdk_type` 编译配置，决定输出的 Demo 功能模块
+    * `AliVCSDK_BasicLive` -> 基础版，`AliVCSDK_InteractiveLive` -> 互动版
+    * 基础版，仅包含基础直播相关功能；互动版，包含基础直播与互动直播功能
     
-  * **直播推流SDK 与 音视频终端SDK 切换**
+  * **直播推流 SDK 与 音视频终端 SDK 切换**
     
-    * `gradle.properties`文件中`allInOne`编译配置，决定使用的SDK类型
-    * true，使用音视频终端SDK；false，使用直播推流SDK；对应关系如下：
+    在 `gradle.properties` 文件中，通过 `allInOne` 参数决定使用的 SDK 类型：
     
-    |                    |    SDK_TYPE=AliVCSDK_BasicLive    |      SDK_TYPE=AliVCSDK_InteractiveLive       |
+    * `true`：使用音视频终端 SDK。
+    * `false`：使用直播推流 SDK。
+    
+    对应关系如下：
+    
+    |                    |    sdk_type=AliVCSDK_BasicLive    |      sdk_type=AliVCSDK_InteractiveLive       |
     | ------------------ | :-------------------------------: | :------------------------------------------: |
     | **allInOne=false** | com.alivc.pusher:AlivcLivePusher  | com.alivc.pusher:AlivcLivePusher_Interactive |
     | **allInOne=true**  | com.aliyun.aio:AliVCSDK_BasicLive |   com.aliyun.aio:AliVCSDK_InteractiveLive    |
     
-  
-* **Demo编译问题：Gradle Distribution无法访问**
 
-由于近期Gradle将gradle distributions的后端存储服务，切换到了GitHub上，而GitHub在国内的访问存在不稳定因素，可能会导致访问失败，因此出现Demo编译失败的问题。解决gradle distribution的问题，即可完成Demo项目的跑通。
+* **Gradle Distribution 无法访问**
 
-## **四、链接指引**
+​	如果遇到 Gradle Distribution 无法访问的问题，可能是因为网络连接不稳定。建议更换 Gradle 源地址或检查本地网络环境。
+
+-----
+
+## **五、链接指引**
 
 ### **1. 文档**
 
 * [阿里云·视频直播](https://www.aliyun.com/product/live)
 * [推流SDK](https://help.aliyun.com/zh/live/developer-reference/push-sdk)
-* [直播推流接口说明](https://help.aliyun.com/zh/live/developer-reference/push-sdk-for-android-methods)
 * [直播连麦](https://help.aliyun.com/zh/live/user-guide/co-streaming-overview)
 * [直播连麦快速入门](https://help.aliyun.com/zh/live/user-guide/quick-start-live-co-streaming)
 * [音视频终端SDK](https://help.aliyun.com/zh/apsara-video-sdk/)
@@ -198,17 +207,18 @@ defaultConfig {
 * [ApsaraVideo Live](https://www.alibabacloud.com/zh/product/apsaravideo-for-live)
 * [Push SDK](https://www.alibabacloud.com/product/apsaravideo-for-live/streaming-sdk)
 * [Push SDK Doc](https://www.alibabacloud.com/help/en/live/developer-reference/push-sdk/)
-* [Push SDK API Doc](https://www.alibabacloud.com/help/en/live/developer-reference/integrate-push-sdk-for-android#f0c462b07a1rh)
 * [Interactive streaming](https://www.alibabacloud.com/help/en/live/user-guide/interactive-streaming-overview)
 
 ### **4. 其它**
 
 * **历史下载包追溯**
 
-  在官网文档[SDK下载与发布记录](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes)中，我们提供了最新的下载包。如：SDK、Demo源码、API文档等。如需追溯历史版本的下载包，您可以自行改动下载地址里面的版本号，进行下载。
+  在 [SDK 下载与发布记录](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes) 页面中，您可以找到最新的 SDK 下载包（包括 SDK、Demo 源码、API 文档等）。如果需要追溯历史版本，可以手动修改下载地址中的版本号进行下载。
 
 * [SDK隐私权政策及合规使用说明](https://help.aliyun.com/zh/live/developer-reference/sdk-download-and-release-notes#76a8fc617eqqa)
 
-## **五、帮助**
+----
 
-如果您在使用推流SDK有任何问题或建议，欢迎通过 [推流SDK异常自助排查](https://help.aliyun.com/zh/live/developer-reference/push-stream-sdk-exception-self-service-troubleshooting) 获取技术支持。
+## **六、帮助**
+
+如果您在使用推流 SDK 有任何问题或建议，欢迎通过 [推流SDK异常自助排查](https://help.aliyun.com/zh/live/developer-reference/push-stream-sdk-exception-self-service-troubleshooting) 获取技术支持。

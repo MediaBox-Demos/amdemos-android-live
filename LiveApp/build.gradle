@@ -89,7 +89,7 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "${project.name}-${SDK_TYPE.split('_').last()}-${variant.buildType.name}-${MTL_buildId}.apk"
+            outputFileName = "${project.name}-${sdk_type.split('_').last()}-${variant.buildType.name}-${MTL_buildId}.apk"
         }
     }
     allprojects {

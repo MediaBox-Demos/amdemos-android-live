@@ -32,11 +32,15 @@ dependencies {
 
     implementation externalSimpleZXing
 
-    implementation externalARTC
-    if (hasRTS() && !"true".equalsIgnoreCase(allInOne)) {
-        implementation externalRtsSDK
+    implementation externalRtsSDK
+    // Add a downgraded version of the player sdk for the live project single build.
+    if ("true".equalsIgnoreCase(allInOne)) {
+        implementation externalPlayerFull
+        implementation externalARTC
+    } else {
+        implementation externalPlayerFullDowngrade
+        implementation externalARTCDowngrade
     }
-    implementation externalPlayerFull
 
     implementation project(':LiveCommon:live_commonbiz')
 }
