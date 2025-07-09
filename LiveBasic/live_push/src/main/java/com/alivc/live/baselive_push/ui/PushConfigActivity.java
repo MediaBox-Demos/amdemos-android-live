@@ -133,7 +133,7 @@ public class PushConfigActivity extends AppCompatActivity {
             mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network.png");
             mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push.png");
         }
-        AlivcLivePushConfig.setMediaProjectionPermissionResultData(null);
+        mAlivcLivePushConfig.setMediaProjectionPermissionResultData(null);
         initView();
         setClick();
         addWaterMarkInfo();

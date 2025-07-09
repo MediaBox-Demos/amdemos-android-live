@@ -106,7 +106,7 @@ public class LivePushSettingView extends LinearLayout {
 
     //异步接口
     private final MutableLiveData<Boolean> mAsyncLiveData = new MutableLiveData<>();
-    public LiveData<Boolean> async = mAutoFocusLiveData;
+    public LiveData<Boolean> async = mAsyncLiveData;
 
     //音乐模式
     private final MutableLiveData<Boolean> mMusicModeLiveData = new MutableLiveData<>();
@@ -422,12 +422,6 @@ public class LivePushSettingView extends LinearLayout {
         mViewBinding.pushArgsSetting.fpsSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (!mCurrentQualityMode.equals(AlivcQualityModeEnum.QM_CUSTOM)) {
-                    mFpsLiveData.setValue(AlivcFpsEnum.FPS_25);
-                    mViewBinding.pushArgsSetting.fpsSeekbar.setProgress(83);
-                    mViewBinding.pushArgsSetting.fpsText.setText(String.valueOf(AlivcFpsEnum.FPS_25.getFps()));
-                    return;
-                }
                 if (progress <= LivePushProgressStep.PROGRESS_0) {
                     mFpsLiveData.setValue(AlivcFpsEnum.FPS_8);
                     mViewBinding.pushArgsSetting.fpsText.setText(String.valueOf(AlivcFpsEnum.FPS_8.getFps()));

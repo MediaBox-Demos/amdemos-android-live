@@ -23,7 +23,6 @@ public class VideoRecordViewManager {
     private static LayoutParams mVideoRecordWindowParams;
 
     private static VideoRecordCameraPreviewView mVideoRecordCameraPreviewWindow;
-    public static int cameraRotation = 0;
     private static LayoutParams mVideoRecordCameraWindowParams;
 
     private static WindowManager mWindowManager;

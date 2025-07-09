@@ -36,5 +36,6 @@ dependencies {
 
     api project(':LiveCommon:live_commonutils')
 
-        api hasInteractiveLive() ? externalLivePusherInteractive : externalLivePusher
+        def isInteractive = project.hasProperty("sdk_type") && "AliVCSDK_InteractiveLive".equalsIgnoreCase(sdk_type)
+        api isInteractive ? externalLivePusherInteractive : externalLivePusher
 }

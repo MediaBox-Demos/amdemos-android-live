@@ -1,9 +1,5 @@
 package com.alivc.live.baselive_recording.ui;
 
-import static com.alivc.live.pusher.AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT;
-import static com.alivc.live.pusher.AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_RIGHT;
-import static com.alivc.live.pusher.AlivcPreviewOrientationEnum.ORIENTATION_PORTRAIT;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -32,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,21 +62,18 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
     private static final String TAG = "VideoRecordConfig";
 
     private AlivcResolutionEnum mDefinition = AlivcResolutionEnum.RESOLUTION_540P;
+
     private static final int REQ_CODE_PERMISSION = 0x1111;
+    private static final int CAPTURE_PERMISSION_REQUEST_CODE = 0x1123;
+    private static final int OVERLAY_PERMISSION_REQUEST_CODE = 0x1124;
+
     private static final int PROGRESS_0 = 0;
-    private static final int PROGRESS_16 = 16;
     private static final int PROGRESS_20 = 20;
-    private static final int PROGRESS_33 = 33;
     private static final int PROGRESS_40 = 40;
-    private static final int PROGRESS_50 = 50;
     private static final int PROGRESS_60 = 60;
-    private static final int PROGRESS_66 = 66;
-    private static final int PROGRESS_75 = 75;
     private static final int PROGRESS_80 = 80;
     private static final int PROGRESS_90 = 90;
     private static final int PROGRESS_100 = 100;
-    public static final int CAPTURE_PERMISSION_REQUEST_CODE = 0x1123;
-    public static final int OVERLAY_PERMISSION_REQUEST_CODE = 0x1124;
 
     private InputMethodManager manager;
     private SeekBar mResolution;
@@ -99,7 +91,6 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
 
     private OrientationEventListener mOrientationEventListener;
 
-
     private Switch mNarrowBandHDConfig;
 
     private int mLastRotation;
@@ -113,23 +104,15 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.video_recording_setting);
+        initViews();
 
         // 注册推流SDK
         AlivcLiveBase.registerSDK();
 
         mAlivcLivePushConfig = new AlivcLivePushConfig();
-        if (mAlivcLivePushConfig.getPreviewOrientation() == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_RIGHT.getOrientation() || mAlivcLivePushConfig.getPreviewOrientation() == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT.getOrientation()) {
-            mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network_land.png");
-            mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push_land.png");
-        } else {
-            mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network.png");
-            mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push.png");
-        }
-        AlivcLivePushConfig.setMediaProjectionPermissionResultData(null);
-        initView();
-        setClick();
-        mOrientationEventListener = new OrientationEventListener(this,
-                SensorManager.SENSOR_DELAY_NORMAL) {
+        configurePushImages(AlivcPreviewOrientationEnum.ORIENTATION_PORTRAIT);
+
+        mOrientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
             @Override
             public void onOrientationChanged(int orientation) {
                 int rotation = getDisplayRotation();
@@ -142,6 +125,8 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
                 }
             }
         };
+
+        // 获取默认推流地址
         Intent intent = getIntent();
         String url = intent.getStringExtra("pushUrl");
         if (!TextUtils.isEmpty(url)) {
@@ -192,30 +177,33 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
         }
     };
 
-    private void initView() {
+    private void initViews() {
         mUrl = (EditText) findViewById(R.id.url_editor);
         mPushTex = (TextView) findViewById(R.id.pushStatusTex);
+        mPushTex.setOnClickListener(onClickListener);
+
         mResolution = (SeekBar) findViewById(R.id.resolution_seekbar);
+        mResolution.setOnSeekBarChangeListener(onSeekBarChangeListener);
+
         mResolutionText = (TextView) findViewById(R.id.resolution_text);
         mOrientation = findViewById(R.id.main_orientation);
+        mOrientation.setOnClickListener(onClickListener);
+
         mQr = (ImageView) findViewById(R.id.qr_code);
+        mQr.setOnClickListener(onClickListener);
+
         mBack = (ImageView) findViewById(R.id.iv_back);
+        mBack.setOnClickListener(onClickListener);
+
         mNoteText = (TextView) findViewById(R.id.note_text);
         mNarrowBandHDConfig = (Switch) findViewById(R.id.narrowband_hd);
+        mNarrowBandHDConfig.setOnCheckedChangeListener(onCheckedChangeListener);
 
+        // 初始化调试推流地址
         String initUrl = PushDemoTestConstants.getTestPushUrl();
         if (!initUrl.isEmpty()) {
             mUrl.setText(initUrl);
         }
-    }
-
-    private void setClick() {
-        mResolution.setOnSeekBarChangeListener(onSeekBarChangeListener);
-        mQr.setOnClickListener(onClickListener);
-        mBack.setOnClickListener(onClickListener);
-        mOrientation.setOnClickListener(onClickListener);
-        mPushTex.setOnClickListener(onClickListener);
-        mNarrowBandHDConfig.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -332,29 +320,18 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
     private PushConfigBottomSheetLive.OnPushConfigSelectorListener mOrientationListener = new PushConfigBottomSheetLive.OnPushConfigSelectorListener() {
         @Override
         public void confirm(String data, int index) {
-            if (index == 0) {
-                if (mAlivcLivePushConfig != null) {
-                    mAlivcLivePushConfig.setPreviewOrientation(ORIENTATION_PORTRAIT);
-                    mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push.png");
-                    mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network.png");
-                }
-            } else if (index == 1) {
-                if (mAlivcLivePushConfig != null) {
-                    mAlivcLivePushConfig.setPreviewOrientation(ORIENTATION_LANDSCAPE_HOME_LEFT);
-                    VideoRecordViewManager.cameraRotation = 90;
-                    mAlivcLivePushConfig.setPausePushImage(getFilesDir() + File.separator + "alivc_resource/background_push_land.png");
-                    mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network_land.png");
-                }
+            AlivcPreviewOrientationEnum currentOrientation = AlivcPreviewOrientationEnum.ORIENTATION_PORTRAIT;
+            if (index == 1) {
+                currentOrientation = AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT;
             } else if (index == 2) {
-                if (mAlivcLivePushConfig != null) {
-                    mAlivcLivePushConfig.setPreviewOrientation(ORIENTATION_LANDSCAPE_HOME_RIGHT);
-                    VideoRecordViewManager.cameraRotation = 270;
-                    mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push_land.png");
-                    mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network_land.png");
-                }
+                currentOrientation = AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_RIGHT;
+            }
+
+            if (mAlivcLivePushConfig != null) {
+                mAlivcLivePushConfig.setPreviewOrientation(currentOrientation);
+                configurePushImages(currentOrientation);
             }
         }
-
     };
 
     private OnCheckedChangeListener onCheckedChangeListener = new OnCheckedChangeListener() {
@@ -367,6 +344,27 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * 根据预览方向设置暂停推流和网络不佳时的图片
+     *
+     * @param orientation 预览方向
+     */
+    private void configurePushImages(AlivcPreviewOrientationEnum orientation) {
+        if (mAlivcLivePushConfig == null) {
+            return;
+        }
+
+        if (orientation == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_RIGHT || orientation == AlivcPreviewOrientationEnum.ORIENTATION_LANDSCAPE_HOME_LEFT) {
+            // 横屏模式
+            mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network_land.png");
+            mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push_land.png");
+        } else {
+            // 竖屏模式
+            mAlivcLivePushConfig.setNetworkPoorPushImage(getFilesDir().getPath() + File.separator + "alivc_resource/poor_network.png");
+            mAlivcLivePushConfig.setPausePushImage(getFilesDir().getPath() + File.separator + "alivc_resource/background_push.png");
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -376,11 +374,9 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mOrientationEventListener != null &&
-                mOrientationEventListener.canDetectOrientation()) {
+        if (mOrientationEventListener != null && mOrientationEventListener.canDetectOrientation()) {
             mOrientationEventListener.enable();
         }
-
     }
 
     private void startCaptureActivityForResult() {
@@ -407,7 +403,7 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
                     startCaptureActivityForResult();
                 } else {
                     // User disagree the permission
-                    Toast.makeText(this, "You must agree the camera permission request before you use the code scan function", Toast.LENGTH_LONG).show();
+                    ToastUtils.show("You must agree the camera permission request before you use the code scan function");
                 }
             }
             break;
@@ -418,7 +414,7 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
 
     private AlivcLivePushConfig getPushConfig() {
         if (mUrl.getText().toString().isEmpty()) {
-            Toast.makeText(this, getString(R.string.url_empty), Toast.LENGTH_LONG).show();
+            ToastUtils.show(getString(R.string.url_empty));
             return null;
         }
         mAlivcLivePushConfig.setResolution(mDefinition);
@@ -446,6 +442,11 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
                 }
                 break;
             case CAPTURE_PERMISSION_REQUEST_CODE: {
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    ToastUtils.show("Start screen recording failed, cancelled by the user");
+                    mIsStartPushing = false;
+                    return;
+                }
                 if (resultCode == Activity.RESULT_OK) {
                     mAlivcLivePushConfig.setMediaProjectionPermissionResultData(data);
                     if (mAlivcLivePushConfig.getMediaProjectionPermissionResultData() != null) {
@@ -514,23 +515,15 @@ public class VideoRecordConfigActivity extends AppCompatActivity {
 
     private void startScreenCapture() {
         if (Build.VERSION.SDK_INT >= 21) {
-            MediaProjectionManager mediaProjectionManager = (MediaProjectionManager)
-                    getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+            MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getApplication().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
             try {
-                this.startActivityForResult(
-                        mediaProjectionManager.createScreenCaptureIntent(), CAPTURE_PERMISSION_REQUEST_CODE);
+                this.startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), CAPTURE_PERMISSION_REQUEST_CODE);
             } catch (ActivityNotFoundException ex) {
                 ex.printStackTrace();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext()
-                                , "Start ScreenRecording failed, current device is NOT supported!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                ToastUtils.show("Start ScreenRecording failed, current device is NOT supported!");
             }
         } else {
-            Toast.makeText(this, "录屏需要5.0版本以上", Toast.LENGTH_LONG).show();
+            ToastUtils.show("录屏需要5.0版本以上");
         }
     }
 
